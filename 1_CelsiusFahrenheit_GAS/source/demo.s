@@ -29,11 +29,21 @@
 		.arm
 		.global main
 main:
-		push {lr}
+		push {r1, lr} 				@; No cal fer-ho amb r0, és el return del main amb valor de 0.
+
+@; temp1F = Celsius2Fahrenheit(temp1C);
+		ldr r1, =temp1C
+		ldr r0, [r1]
+		bl Celsius2Fahrenheit		@; En r0 quedarà el valor fins que no el carreguem de nou a memòria.
+		ldr r1, = temp1F
+		str r0, [r1]				
 		
-			@; temp1F = Celsius2Fahrenheit(temp1C);
-		
-			@; temp2C = Fahrenheit2Celsius(temp2F);
+@; temp2C = Fahrenheit2Celsius(temp2F);
+		ldr r1, =temp2F				
+		ldr r0, [r1]				
+		bl Fahrenheit2Celsius		@; En r0 quedarà el valor fins que no el carreguem de nou a memòria.
+		ldr r1, =temp2C
+		str r0, [r1]
 
 @; TESTING POINT: check the results
 @;	(gdb) p /x temp1F		-> 0x000BEC26 
@@ -41,7 +51,7 @@ main:
 @; BREAKPOINT
 		mov r0, #0					@; return(0)
 		
-		pop {pc}
+		pop {r1, pc}
 
 .end
 
