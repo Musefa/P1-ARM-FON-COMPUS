@@ -41,10 +41,10 @@ Celsius2Fahrenheit:
 		smull r1, r2, r0, r3 											@; TempC * 9/5. r1 = RdLo, r2 = RdHi
 		
 		@; EXPLICAR EL PERQUÊ DE TANTA SIMPLIFICACIÓ COMENTARIS !!!!!!
-		mov r2, r2, lsl #19												@; Guardem en un registre temporal r3 els bits que es perdrien en realitzar un asr al Rhi (r2).
+														@; Guardem en un registre temporal r3 els bits que es perdrien en realitzar un asr al Rhi (r2).
 		mov r1, r1, lsr #13												@; Realitzem lsr (factor de conversió de la multiplicació) al Rlo (r1). Podríem fer un asr, però
 																		@; fer un lsr ens facilita la inserció posterior dels bits del registre temporal (r3).
-		orr r0, r1, r2													@; Fem un orr per afegir al registre de retorn (r0) els bits del registre temporal (r3). Podríem fer-ho
+		orr r0, r1, r2, lsl #19													@; Fem un orr per afegir al registre de retorn (r0) els bits del registre temporal (r3). Podríem fer-ho
 																		@; sobre r1, però com acabem retornant només r0 ja ens va bé així.
 																		
 		add r0, #0x00040000 											@; Sumem el desplaçament en l'escala Fahrenheit. No cal sumar res al Rhi (r2) perquè perdrem aquesta info.
@@ -65,10 +65,10 @@ Fahrenheit2Celsius:
 		smull r1, r2, r0, r3 											@; (TempF - 32) * 5/9. r1 = RdLo, r2 = RdHi
 		
 		@; EXPLICAR EL PERQUÊ DE TANTA SIMPLIFICACIÓ COMENTARIS !!!!!!
-		mov r2, r2, lsl #19												@; Guardem en un registre temporal r3 els bits que es perdrien en realitzar un asr al Rhi (r2).
+													@; Guardem en un registre temporal r3 els bits que es perdrien en realitzar un asr al Rhi (r2).
 		mov r1, r1, lsr #13												@; Realitzem lsr (factor de conversió de la multiplicació) al Rlo (r1). Podríem fer un asr, però
 																		@; fer un lsr ens facilita la inserció posterior dels bits del registre temporal (r3).
-		orr r0, r1, r2													@; Fem un orr per afegir al registre de retorn (r0) els bits del registre temporal (r3). Podríem fer-ho
+		orr r0, r1, r2, lsl #19													@; Fem un orr per afegir al registre de retorn (r0) els bits del registre temporal (r3). Podríem fer-ho
 																		@; sobre r1, però com acabem retornant només r0 ja ens va bé així.
 																		
 		pop {r1 - r3, pc}
