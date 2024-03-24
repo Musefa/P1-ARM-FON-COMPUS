@@ -29,21 +29,24 @@
 		.arm
 		.global main
 main:
-		push {r1, lr} 				@; No cal fer-ho amb r0, és el return del main amb valor de 0.
+		push {r1, lr} 				@; No cal fer un push amb r0; és el return del main amb valor de 0.
 
 @; temp1F = Celsius2Fahrenheit(temp1C);
-		ldr r1, =temp1C
-		ldr r0, [r1]
-		bl Celsius2Fahrenheit		@; En r0 quedarà el valor fins que no el carreguem de nou a memòria.
-		ldr r1, = temp1F
-		str r0, [r1]				
+		ldr r1, =temp1C				@; r1 = punter a memòria de temp1C.
+		ldr r0, [r1]				@; r0 = temp1C (valor, càrrega des de memòria).
+		bl Celsius2Fahrenheit		@; r0 = temp1F (valor, pel retorn de la funció Celsius2Fahreneheit).
+		ldr r1, = temp1F			@; r1 = punter a memòria de temp1F. Com no s'ha d'accedir més a temp1C, 
+									@; es pot reutilitzar el registre r1.
+		str r0, [r1]				@; Es guarda el valor de temp1F (en r0) a la seva posició de memòria.
 		
 @; temp2C = Fahrenheit2Celsius(temp2F);
-		ldr r1, =temp2F				
-		ldr r0, [r1]				
-		bl Fahrenheit2Celsius		@; En r0 quedarà el valor fins que no el carreguem de nou a memòria.
-		ldr r1, =temp2C
-		str r0, [r1]
+		ldr r1, =temp2F				@; r1 = punter a memòria de temp2F. Com no s'ha d'accedir més a temp1F,
+									@; es pot reutilitzar el registre r1.
+		ldr r0, [r1]				@; r0 = temp2F (valor, càrrega des de memòria).
+		bl Fahrenheit2Celsius		@; r0 = temp2C (valor, pel retorn de la funció Fahrenheit2Celsius).
+		ldr r1, =temp2C				@; r1 = punter a memòria de temp2C. Com no s'ha d'accedir més a temp2F,
+									@; es pot reutilitzar el registre r1.
+		str r0, [r1]				@; Es guarda el valor de temp2C (en r0) a la seva posició de memòria.
 
 @; TESTING POINT: check the results
 @;	(gdb) p /x temp1F		-> 0x000BEC26 
@@ -51,7 +54,10 @@ main:
 @; BREAKPOINT
 		mov r0, #0					@; return(0)
 		
-		pop {r1, pc}
+		pop {r1, pc}				@; pop per recuperar els valors previs de r1 i posar el contingut del lr al
+									@; pc, per produir-se el retorn de la funció. En aquest cas, sent una funció
+									@; main, no es retorna a una altra posició de memòria per continuar executant
+									@; instruccions.
 
 .end
 
