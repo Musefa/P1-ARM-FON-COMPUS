@@ -15,4 +15,3 @@ MM_TMAXF = 12	@; Offset del camp temperatura màxima, en graus Fahrenheit
 MM_IDMIN = 16	@; Offset del camp índex temperatura mínima
 MM_IDMAX = 18	@; Offset del camp índex temperatura màxima
 MM_SIZE  = 20	@; Número de bytes que ocupa l'estructura 't_maxmin'
-
