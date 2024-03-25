@@ -11,4 +11,5 @@ FASE 2:
     4.- DOCUMENTAR 12 EN COMA FIJA Q13 !!!!!!! CODIGO EN C MAL !!!!!!
     5.- EN FER START DE NOU, CANVIEN LES DADES DE LA TAULA??????????
     6.- INCLUDE DEL Q13.i??? (mascara de signo necesaria)?????
+    7.- ADJUNTAR CÁLCULO DIVISIÓN Q13/ENTERO.
     -   ME FALLA EL TEST 2 DEL TEST_GEOTEMP (oveflow???).
