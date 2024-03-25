@@ -20,6 +20,7 @@
 @; CONSTANTS (càlcul en documentació i vídeos de la pràctica).
 Q13_9_5 = 0x0000399A
 Q13_5_9 = 0x000011C7
+Q13_32 = 0x00040000
 
 @; Celsius2Fahrenheit(): converteix una temperatura en graus Celsius a la
 @;						temperatura equivalent en graus Fahrenheit, utilitzant
@@ -74,7 +75,7 @@ Celsius2Fahrenheit:
 		@; mov addicional.
 		@; ------------------------------------------------------------------------------------------------------------------------------------------------
 																		
-		add r0, #0x00040000 											@; Es suma el desplaçament en l'escala Fahrenheit. No cal sumar res al Rhi (r2) 
+		add r0, #Q13_32 												@; Es suma el desplaçament en l'escala Fahrenheit. No cal sumar res al Rhi (r2) 
 																		@; perquèes perd aquesta informació, per tant tampoc cal actualitzar els flags.
 		pop {r1 - r3, pc}												@; Es fa un pop als registres emprats en la funció amb els valors previs a 
 																		@; l'execució d'aquesta i al pc per fer efectiu el retorn de la funció al main.
@@ -90,7 +91,7 @@ Celsius2Fahrenheit:
 	.global Fahrenheit2Celsius
 Fahrenheit2Celsius:
 		push {r1 - r3, lr}
-		sub r0, #0x00040000												@; Es resta el desplaçament en l'escala Fahrenheit.
+		sub r0, #Q13_32													@; Es resta el desplaçament en l'escala Fahrenheit.
 		ldr r3, =Q13_5_9												@; Es carrega el nombre 5/9 en codificació en coma fixa al registre r3. S'ha de fer
 																		@; així ja que com la distància de separació del bit a 1 de major pes i el bit a 1
 																		@; de menys pes és major a 8 bits no es pot emprar com a registre immediat.

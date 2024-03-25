@@ -108,10 +108,11 @@ avgmaxmin_city:
 		ldr r10, [r2]										@; Es carrega de R2 la mitjana ja calculada.
 		mvn r10, r10										
 		add r10, #0b1										@; - avg = avg en Ca2 (Q13)
+		b .Lyetdivided										@; Es salta a l'etiqueta de divisió completada.
 .Lnotminus:
 		bl div_mod
 		ldr r10, [r2]
-		
+.Lyetdivided:
 		str r8, [r4, #MM_TMINC]								@; mmres->tmin_C = min;
 		str r7, [r4, #MM_TMAXC]								@; mmres->tmax_C = max;
 		mov r0, r8
