@@ -40,7 +40,7 @@ Celsius2Fahrenheit:
 		smull r1, r2, r0, r3 											@; TempC * 9/5. r1 = RdLo, r2 = RdHi
 		
 		@; ------------------------------------------------------------------------------------------------------------------------------------------------
-		@; DESPLAÇAMENT LÒGIC A LA DRETA D'UN NOMBRE DE 64 BITS EMMAGATZEMAT EN 2 REGISTRES----------------------------------------------------------------
+		@; DESPLAÇAMENT LÒGIC A LA DRETA D'UN NOMBRE DE 64 BITS EMMAGATZEMAT EN 2 REGISTRES
 		@; Un cop realitzada la multiplicació, en coma fixa cal realitzar un ajust del resultat dividint per 2^f (sent f el nombre de bits emprats per 
 		@; representar la part decimal del nombre, en el cas d'aquesta pràctica f = 13). Aquesta divisió en ensamblador es pot traduir en un desplaçament
 		@; lògic a la dreta (lsr), ja que s'està operant amb un nombre expressable com a potència de la base binària (el nombre s'expressa com 2^f, la base
@@ -63,7 +63,7 @@ Celsius2Fahrenheit:
 		@; 		mov Rhi, Rhi, lsr Rd --> Es desplacen els d bits a la dreta en el registre Rhi.
 		@; Ara bé, en aquesta pràctica es fan únicament les següents dues operacions:
 	
-		mov r1, r1, lsr #13												
+		mov r1, r1, lsr #13		
 		orr r0, r1, r2, lsl #(32-13)
 
 		@; Això es deu a que no s'empra un registre addicional per guardar el 32 - d bits (s'empren valors immediats i s'escriu com una resta, en el procés
