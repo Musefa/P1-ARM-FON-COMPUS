@@ -30,7 +30,7 @@
 
 
 @;-----------------------------------------------------------------------------------
-@; avgmaxmin_city(): calcula la temperatura mitjana, màxima i mínima d'una
+@; 	avgmaxmin_city(): calcula la temperatura mitjana, màxima i mínima d'una
 @;				ciutat d'una taula de temperatures, amb una fila per ciutat i
 @;				una columna per mes, expressades en graus Celsius en format
 @;				Q13.
@@ -58,7 +58,7 @@
 @; 		R9 = i
 @; 		R10 = tvar
 @; 		R11 = *quo / index de posicio.
-@; 		R12 = *res / dir mem taula.
+@; 		R12 = *res / dir mem taula. (en R0 guardem avg per passar-ho directament com a numerador a div_mod.
 
 
 	.global avgmaxmin_city
@@ -91,7 +91,7 @@ avgmaxmin_city:
 		movlt r8, r10										@; tvar < min --> min = tvar;
 		movlt r5, r9										@; idmin = i;
 		add r9, #1											@; i++;
-		cmp r9, #12											
+		cmp r9, r1											@; Es pot posar #12, però emprant R1 es manté una simetria amb la subrutina avgmaxmin_month.											
 		blo .Lfor											@; i < 12 --> es continua el bucle.
 @;endfor
 		sub sp, #8											@; Es reserva espai a la pila per dos variables locals, pel quo i mod de la subrutina div_mod.
@@ -126,13 +126,95 @@ avgmaxmin_city:
 		mov r0, r10											@; Es recupera avg per fer el retorn a R0.		
 		add sp, #8											@; Es recupera l'espai a la pila per les variables locals emprades.
 		pop {r1 - r12, pc}
-		
-		
-		
-		
+
+@;-----------------------------------------------------------------------------------
+@;	avgmaxmin_month(): calcula la temperatura mitjana, màxima i mínima d'un mes
+@;				d'una taula de temperatures, amb una fila per ciutat i una
+@;				columna per mes, expressades en graus Celsius en format Q13.
+@;		Paràmetres:
+@;			R0 -> adreça de la taula de temperatures de 12 columnes i nrows files.
+@;			R1 -> nrows, número de files de la taula.
+@;			R2 -> id_month, índex del mes a processar, [0, 11].
+@;			R3 -> t_maxmin *mmres, adreça de l'estructura multicamp on es guarden
+@;				  les temperatures màximes i mínimes en Celsius i Fahrenheit, així
+@;				  com la posició on estan en la taula.
+@;-----------------------------------------------------------------------------------
+
+@;		R0 = dir mem taula
+@;		R1 = nrows
+@; 		R2 = id_month / dir mem cociente
+@; 		R3 = *mmres
+@; 		R4 =  / *mmres
+@; 		R5 = idmin
+@; 		R6 = idmax
+@; 		R7 = max
+@; 		R8 = min
+@; 		R9 = i
+@; 		R10 = tvar
+@; 		R11 = NC (12, temp)
+@; 		R12 = dir mem taula (en R0 guardem avg per passar-ho directament com a numerador a div_mod.
+
 	.global avgmaxmin_month
 avgmaxmin_month:
-		push {lr}
-		
-		pop {pc}
+		push {r1 - r12, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquest regitsre per accedir a la fila id_city.
+		mov r12, r0 										@; R12 = R0 = dir mem taula.
+		mov r11, #12										@; Temporalment, conté NC = 12 (mesos).
+		ldr r0, [r12, r2, lsl#2]							@; avg = ttemp[0][id_month]; Com fila = 0, es pot carregar la info directament amb la columna desitjada
+															@; amb un desplaçament a l'esquerra de dos bits aplicat (es multiplica per 4 el nombre ja que cada 
+															@; posició de la taula de Q13 ocupa 4 espais en memòria, 32 bits).
+		mov r5, #0											@; R5 = idmin = 0;
+		mov r6, #0											@; R6 = idmax = 0;
+		mov r7, r0											@; R7 = max = avg;
+		mov r8, r0											@; R8 = min = avg;
+		mov r9, #1											@; R9 = i = 1;
+.Lwhile:
+		cmp r9, r1																						
+		bhs .Lendwhile										@; i >= nrows --> s'acaba el bucle.		
+		mla r4, r9, r11, r2									@; R4 = i * NC(12) + j(id_month).
+		ldr r10, [r12, r4, lsl #2]							@; R10 = tvar = ttemp[i][id_month]; De nou cal fer lsl pels 4 bytes a memòria de cada posició de la 
+															@; matriu de temperatures.
+		add r0, r10											@; avg += tvar;
+		@; Condicional màxim.
+		cmp r10, r7
+		movgt r7, r10										@; tvar > max --> max = tvar;
+		movgt r6, r9										@; idmax = i;
+		@;Condicional mínim
+		cmp r10, r8
+		movlt r8, r10										@; tvar < min --> min = tvar;
+		movlt r5, r9										@; idmin = i;
+		add r9, #1											@; i++;
+		b .Lwhile											@; Es salta al principi del bucle while per comprovar si cal iterar o no.
+.Lendwhile:		
+		sub sp, #8											@; Es reserva espai a la pila per dos variables locals, pel quo i mod de la subrutina div_mod.
+		mov r2, sp											@; R2 = dir mem cociente. Per push anterior es pot fer aquesta operació. Es perd l'índex de posició, però
+															@; com no s'empra més no passa res.
+		mov r4, r3											@; R4 = R3 = *mmres. Es perd l'índex de matriu però no s'emprarà més.
+		add r3, sp, #4										@; R3 = dir mem residuo. No s'empra després, però cal indicar-ho per la subrutina div_mod.
+		and r10, r0, #MASK_SIGN								@; R10 = SIGNE DE R0
+		cmp r10, #0											@; Si R10 = 0, R0 > 0, si no, no.
+		beq .Lnotminus1										@; avg és positiu o negatiu ???
+		mvn r0, r0										
+		add r0, #0b1										@; avg = - avg en Ca2 (Q13)
+		bl div_mod											@; Llamada a rutina div_mod().
+		ldr r10, [r2]										@; Es carrega de R2 la mitjana ja calculada.
+		mvn r10, r10										
+		add r10, #0b1										@; - avg = avg en Ca2 (Q13)
+		b .Lyetdivided1										@; Es salta a l'etiqueta de divisió completada.
+.Lnotminus1:
+		bl div_mod
+		ldr r10, [r2]
+.Lyetdivided1:
+		str r8, [r4, #MM_TMINC]								@; mmres->tmin_C = min;
+		str r7, [r4, #MM_TMAXC]								@; mmres->tmax_C = max;
+		mov r0, r8
+		bl Celsius2Fahrenheit								@; R0 = min (F)
+		str r0, [r4, #MM_TMINF]								@; mmres->tmin_F = Celsius2Fahrenheit(min);
+		mov r0, r7
+		bl Celsius2Fahrenheit								@; R0 = max (F)
+		str r0, [r4, #MM_TMAXF]								@; mmres->tmax_F = Celsius2Fahrenheit(max);
+		strh r5, [r4, #MM_IDMIN]							@; mmres->id_min = idmin;
+		strh r6, [r4, #MM_IDMAX]							@; mmres->id_max = idmax;
+		mov r0, r10											@; Es recupera avg per fer el retorn a R0.		
+		add sp, #8											@; Es recupera l'espai a la pila per les variables locals emprades.
+		pop {r1 - r12, pc}
 .end
