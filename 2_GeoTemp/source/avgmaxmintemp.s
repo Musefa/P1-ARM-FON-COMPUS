@@ -1,5 +1,5 @@
 @;----------------------------------------------------------------
-@;	"avgmaxmintemp.c": rutines de càlcul de valors mitjans, màxims
+@;	"avgmaxmintemp.s": rutines de càlcul de valors mitjans, màxims
 @;	i mínims d'una taula de temperatures, expressades en graus
 @;	Celsius o Fahrenheit, en format Q13 (coma fixa 1:18:13).
 @;----------------------------------------------------------------

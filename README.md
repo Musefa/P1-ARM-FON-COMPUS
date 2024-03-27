@@ -12,3 +12,9 @@ FASE 2:
     5.- EN FER START DE NOU, CANVIEN LES DADES DE LA TAULA??????????
     6.- INCLUDE DEL Q13.i??? (mascara de signo necesaria)?????
     7.- ADJUNTAR CÁLCULO DIVISIÓN Q13/ENTERO.
+    TO DO: Més proves + actualitzar resultats esperats en fitxer test_geotemp.c
+FASE 3:
+    1.- JUSTIFICACIÓN COMENTARIOS PRODUCTO (mismo dilema que en FASE 1/2).
+
+IMPORTANTISIMOOOOO:
+        -   Modificar FASE 1 Y FASE 3: Se puede guardar el resultado de la multiplicacion en el mismo registro siempre y cuando este no sea RM!!!
