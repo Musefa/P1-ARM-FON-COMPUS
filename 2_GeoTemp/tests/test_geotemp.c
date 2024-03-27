@@ -10,18 +10,30 @@
 								   macro for dealing with Q13 numbers */
 #include "avgmaxmintemp.h"		/* mmres: return type from avgmaxmin routines */
 
-#define NUM_TEST_ROWS	3
-
+#define NUM_TEST_ROWS	5
+	/**
+	 * NOTES:
+	 * 1.- Max values could be tested, but it's something impossible (because of teh natural range of 
+	 *	temperatures.
+	 * 2.- All positive could be tested, but already done with test 0.
+	*/
+	
 Q13 test_data[NUM_TEST_ROWS][12] = {
-	{MAKE_Q13(13.4), MAKE_Q13(13.4), MAKE_Q13(20.0), MAKE_Q13(13.4),	// several replicated min and max
+	{MAKE_Q13(13.4), MAKE_Q13(13.4), MAKE_Q13(20.0), MAKE_Q13(13.4),			// several replicated min and max
 	 MAKE_Q13(20.0), MAKE_Q13(20.0), MAKE_Q13(25.9), MAKE_Q13(25.9),
 	 MAKE_Q13(20.0), MAKE_Q13(20.0), MAKE_Q13(20.0), MAKE_Q13(25.9)},
-	{MAKE_Q13(-2.2), MAKE_Q13(-3.5), MAKE_Q13(-5.8), MAKE_Q13(-7.5),	// all negatives
+	{MAKE_Q13(-2.2), MAKE_Q13(-3.5), MAKE_Q13(-5.8), MAKE_Q13(-7.5),			// all negatives
 	 MAKE_Q13(-11.5), MAKE_Q13(-15.4), MAKE_Q13(-18.8), MAKE_Q13(-18.5),
 	 MAKE_Q13(-14.9), MAKE_Q13(-10.3), MAKE_Q13(-5.7), MAKE_Q13(-3.0)},
-	{MAKE_Q13(0.1), MAKE_Q13(0.3), MAKE_Q13(0.7), MAKE_Q13(0.8),		// all values around 0º Celsius
+	{MAKE_Q13(0.1), MAKE_Q13(0.3), MAKE_Q13(0.7), MAKE_Q13(0.8),				// all values around 0º Celsius
 	 MAKE_Q13(0.8), MAKE_Q13(-0.9), MAKE_Q13(-0.7), MAKE_Q13(0.5),
-	 MAKE_Q13(0.0), MAKE_Q13(0.7), MAKE_Q13(0.5), MAKE_Q13(-0.9)}
+	 MAKE_Q13(0.0), MAKE_Q13(0.7), MAKE_Q13(0.5), MAKE_Q13(-0.9),
+	 {MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0),   		// all same and extremely high temperatures.
+	  MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0)
+	  MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0)},
+	 {MAKE_Q13(-17.78), MAKE_Q13(-17.58), MAKE_Q13(-17.38), MAKE_Q13(-17.88),
+	  MAKE_Q13(-17.98), MAKE_Q13(-17.78), MAKE_Q13(-18.08), MAKE_Q13(-17.28),
+	  MAKE_Q13(-18.68), MAKE_Q13(-16.88), MAKE_Q13(-17.68), MAKE_Q13(-17.78)}} 	// all values around 0ª Fahrenheit
 };
 
 /* type definition of the structured record that holds the test case values */
