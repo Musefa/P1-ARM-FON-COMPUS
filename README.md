@@ -8,7 +8,7 @@ FASE 2:
     1.- OPTIMIZAR INCLUDES????????
     2.- DEPENDENCIAS DEL build/geotemp.o CORRECTAS O HACER -I./include (avgmaxmintemp.i???).
     3.- HAY QUE HACER UN .o DEL avgmaxmintemp.c O CON EL DEL avmaxmintemp.s BASTA???
-    4.- DOCUMENTAR 12 EN COMA FIJA Q13 !!!!!!! CODIGO EN C MAL !!!!!!
+    4.- DOCUMENTAR 12 EN COMA FIJA Q13 !!!!!!!
     5.- EN FER START DE NOU, CANVIEN LES DADES DE LA TAULA??????????
     6.- INCLUDE DEL Q13.i??? (mascara de signo necesaria)?????
     7.- ADJUNTAR CÁLCULO DIVISIÓN Q13/ENTERO.
@@ -17,4 +17,4 @@ FASE 3:
     1.- JUSTIFICACIÓN COMENTARIOS PRODUCTO (mismo dilema que en FASE 1/2).
 
 IMPORTANTISIMOOOOO:
-        -   Modificar FASE 1 Y FASE 3: Se puede guardar el resultado de la multiplicacion en el mismo registro siempre y cuando este no sea RM!!!
+        -   JUSTIFICAR smull r1, r2, r0, r3 frente a smull r0, r1, r3, r0  POR EFICIENCIA TEMPORAL/DE EJECUCIÓN PARA FASE 1 (EN FASE 3 PLANTEAR COMPARACIÓN).

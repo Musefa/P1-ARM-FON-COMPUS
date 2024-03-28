@@ -31,9 +31,9 @@ Q13 test_data[NUM_TEST_ROWS][12] = {
 	 {MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0),   		// all same and extremely high temperatures.
 	  MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0)
 	  MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0)},
-	 {MAKE_Q13(-17.78), MAKE_Q13(-17.58), MAKE_Q13(-17.38), MAKE_Q13(-17.88),
+	 {MAKE_Q13(-17.78), MAKE_Q13(-17.58), MAKE_Q13(-17.38), MAKE_Q13(-17.88),	// all values around 0ª Fahrenheit
 	  MAKE_Q13(-17.98), MAKE_Q13(-17.78), MAKE_Q13(-18.08), MAKE_Q13(-17.28),
-	  MAKE_Q13(-18.68), MAKE_Q13(-16.88), MAKE_Q13(-17.68), MAKE_Q13(-17.78)}} 	// all values around 0ª Fahrenheit
+	  MAKE_Q13(-18.68), MAKE_Q13(-16.88), MAKE_Q13(-17.68), MAKE_Q13(-17.78)}} 	
 };
 
 /* type definition of the structured record that holds the test case values */
