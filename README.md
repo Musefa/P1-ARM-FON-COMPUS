@@ -12,9 +12,12 @@ FASE 2:
     5.- EN FER START DE NOU, CANVIEN LES DADES DE LA TAULA??????????
     6.- INCLUDE DEL Q13.i??? (mascara de signo necesaria)?????
     7.- ADJUNTAR CÁLCULO DIVISIÓN Q13/ENTERO.
-    TO DO: Més proves + actualitzar resultats esperats en fitxer test_geotemp.c
+    TO DO: Més proves
 FASE 3:
     1.- JUSTIFICACIÓN COMENTARIOS PRODUCTO (mismo dilema que en FASE 1/2).
 
 IMPORTANTISIMOOOOO:
         -   JUSTIFICAR smull r1, r2, r0, r3 frente a smull r0, r1, r3, r0  POR EFICIENCIA TEMPORAL/DE EJECUCIÓN PARA FASE 1 (EN FASE 3 PLANTEAR COMPARACIÓN).
+
+COMENTAR EN REUNIONES:
+        -   CAMBIO DE SIGNO CON INSTRUCCIÓN rsb (no mvn + add) (fase 2).
