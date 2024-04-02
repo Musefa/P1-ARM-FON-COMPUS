@@ -23,7 +23,7 @@ libQ13.a: build/Q13.o
 	arm-none-eabi-ar -rs libQ13.a build/Q13.o
 
 build/Q13.o: sources/Q13.s includes/Q13.h
-	arm-none-eabi-as $(ASFLAGS) -c sources/Q13.s -o build/Q13.o
+	arm-none-eabi-as $(ASFLAGS) sources/Q13.s -o build/Q13.o
 
 
 #-------------------------------------------------------------------------------

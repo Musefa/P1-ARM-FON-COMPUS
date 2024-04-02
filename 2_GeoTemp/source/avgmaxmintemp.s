@@ -102,10 +102,10 @@ avgmaxmin_city:
 		and r10, r0, #MASK_SIGN								@; R10 = SIGNE DE R0
 		cmp r10, #0											@; Si R10 = 0, R0 > 0, si no, no.
 		beq .Lnotminus										@; avg és positiu o negatiu ???
-		rsb r0, #1											@; avg = - avg en Ca2 (Q13)
+		rsb r0, #0											@; avg = - avg en Ca2 (Q13)
 		bl div_mod											@; Llamada a rutina div_mod().
 		ldr r10, [r2]										@; Es carrega de R2 la mitjana ja calculada.
-		rsb r10, #1											@; avg = - avg en Ca2 (Q13)
+		rsb r10, #0											@; avg = - avg en Ca2 (Q13)
 		b .Lyetdivided										@; Es salta a l'etiqueta de divisió completada.
 .Lnotminus:
 		bl div_mod
@@ -191,10 +191,10 @@ avgmaxmin_month:
 		and r10, r0, #MASK_SIGN								@; R10 = SIGNE DE R0
 		cmp r10, #0											@; Si R10 = 0, R0 > 0, si no, no.
 		beq .Lnotminus1										@; avg és positiu o negatiu ???
-		rsb r0, #1											@; avg = - avg en Ca2 (Q13)
+		rsb r0, #0											@; avg = - avg en Ca2 (Q13)
 		bl div_mod											@; Llamada a rutina div_mod().
 		ldr r10, [r2]										@; Es carrega de R2 la mitjana ja calculada.
-		rsb r10, #1											@; avg = - avg en Ca2 (Q13)
+		rsb r10, #0											@; avg = - avg en Ca2 (Q13)
 		b .Lyetdivided1										@; Es salta a l'etiqueta de divisió completada.
 .Lnotminus1:
 		bl div_mod

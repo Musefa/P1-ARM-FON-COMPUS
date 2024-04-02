@@ -14,7 +14,7 @@ ASFLAGS	:= $(ARCH) $(INCL) -g
 CCFLAGS	:= -Wall -gdwarf-3 -O0 $(ARCH) $(INCL) -c
 # A diferència de la fase 1, incloem en LDFLAGS els directoris dels arxius objecte
 # externs a la tasca/fase, startup.o i CelsiusFahrenheit.o.
-LDFLAGS := -z max-page-size=0x8000   
+LDFLAGS := -z max-page-size=0x8000 -Lp_lib
 
 
 #-------------------------------------------------------------------------------
