@@ -165,10 +165,11 @@ avgmaxmin_month:
 		mov r7, r0											@; R7 = max = avg;
 		mov r8, r0											@; R8 = min = avg;
 		mov r9, #1											@; R9 = i = 1;
+		mov r4, r2											@; R4 = índex d'avenç per la matriu. Comença en R4 = R2 = id_month.
 .Lwhile:
 		cmp r9, r1																						
 		bhs .Lendwhile										@; i >= nrows --> s'acaba el bucle.		
-		mla r4, r9, r11, r2									@; R4 = i * NC(12) + j(id_month).
+		add r4, r11											@; S'avança per la matriu NC (una fila).
 		ldr r10, [r12, r4, lsl #2]							@; R10 = tvar = ttemp[i][id_month]; De nou cal fer lsl pels 4 bytes a memòria de cada posició de la 
 															@; matriu de temperatures.
 		add r0, r10											@; avg += tvar;
