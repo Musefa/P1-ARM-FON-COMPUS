@@ -23,6 +23,7 @@ FASE 3:
 IMPORTANTISIMOOOOO:
         -   JUSTIFICAR smull r1, r2, r0, r3 frente a smull r0, r1, r3, r0  POR EFICIENCIA TEMPORAL/DE EJECUCIÓN PARA FASE 1 (EN FASE 3 PLANTEAR COMPARACIÓN).
         -   Cambiar idioma de cociente y residuo de los comentarios de la fase 2 y 3 (al acceder a la pila para ocupar registros).
+        -   Revisar errors típics (avance por matrices???).
 
 # ESTADO ACTUAL: Subrutinas de la fase 3 acabadas. Realizar pruebas, ensamblar librería de operaciones y adaptar fases 1 y 2 a código.
 
