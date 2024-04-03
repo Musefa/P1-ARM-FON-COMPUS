@@ -11,4 +11,3 @@
 MASK_SIGN = 0x80000000				@; bit 31:		signe
 MASK_INT  = 0x7FFFD000				@; bits 30..13:	part entera
 MASK_FRAC =	0x00001FFF				@; bits 12..0:	part fraccionària
-MASK_NUM = 0xFFFFFFFF				@; tots els bits del nombre, per filtrar el signe del Rhi al mul_Q13.
