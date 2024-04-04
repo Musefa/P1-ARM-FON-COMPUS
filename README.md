@@ -19,11 +19,18 @@ FASE 3:
     1.- JUSTIFICACIÓN COMENTARIOS PRODUCTO (mismo dilema que en FASE 1/2).
     2.- ADICION DE MASK_NUM VALIDA EN Q13.i???
     3.- JUSTIFICAR MAKE_Q13(1.0) /// CALCULAR MAKE_Q13(1.0) << 13. Poner directamente el número calculado o calcular << 13 dentro del código???
+    4.- LIB FONCOMPUS + STARTUP.o en TESTS???
+    5.- DONDE GUARDAMOS LIBQ13.a, EN DIRECTORIO BASE???
+    TO DO: Más pruebas (-0.0?????, USAR MASCARA DE BITS?????)
+           Acabar de traduir fases 1 y 2 con nueva librería.
 
 IMPORTANTISIMOOOOO:
         -   JUSTIFICAR smull r1, r2, r0, r3 frente a smull r0, r1, r3, r0  POR EFICIENCIA TEMPORAL/DE EJECUCIÓN PARA FASE 1 (EN FASE 3 PLANTEAR COMPARACIÓN).
         -   Cambiar idioma de cociente y residuo de los comentarios de la fase 2 y 3 (al acceder a la pila para ocupar registros).
         -   Revisar errors típics (avance por matrices???).
+        -   Preguntar por implementación de cambio de signo de la división en la segunda fase (en la tercera no hay otra opción).
+        -   Uso de máscaras???
+        -   PRUEBA DE -0.0 EN FASE 3 !!!!!!!
 
 # ESTADO ACTUAL: Subrutinas de la fase 3 acabadas. Realizar pruebas, ensamblar librería de operaciones y adaptar fases 1 y 2 a código.
 

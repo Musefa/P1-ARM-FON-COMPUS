@@ -101,7 +101,7 @@ mul_Q13:
 		@; Ara bé, en aquesta pràctica es fan únicament les següents tres operacions:
 		
 		mov r0, r0, lsr #13
-		orr r0, r3, lsl #(32-19)									@; En r0 ja queda el resultat final.
+		orr r0, r3, lsl #(32-13)									@; En r0 ja queda el resultat final.
 		mov r3, r3, asr #13											@; Cal fer el desplaçament per controlar l'overflow.
 		
 		@; ACABAR DE REVISAR COMENTARIS MULTIPLICACIÓ.
@@ -136,50 +136,44 @@ mul_Q13:
 @;				0: no s'ha produït overflow, resultat correcte.
 @;				1: hi ha overflow (resultat massa gran) i el que es
 @;				   retorna són els bits baixos del resultat.
+@;		RESULTAT -> R0 = divisió dels dos nombres.
 @;----------------------------------------------------------------
 	.global div_Q13
 div_Q13:
-		push {r1, r2, r3, r10, lr}									 
+		push {r1 - r3, r9, lr}									 
 		cmp r1, #0														
 		moveq r9, #1												@; divisor == 0 -> no divisible, infinito, ov = 1; S'empra r9 per
 																	@; reaprofitar millor després r3 (per la funció div_mod).
 		moveq r0, #0												@; Cocient igual a 0.
-		b .LendDiv
+		beq .LendDiv
 		@; Inversió de num2.
 		@; No s'inicialitza ov perquè quedarà ja inicialitzat a posteriori, amb el resultat de mul_Q13.
 		sub sp, #8													@; Es reserva espai a la pila per dos variables locals, pel quo i mod de la subrutina div_mod.
-		mov r10, r2													@; Es salva el contingut de r2 a r10 (dir mem overflow).
 		mov r2, sp													@; R2 = dir mem cociente. Per push anterior es pot fer aquesta operació. Es perd l'índex de posició, però
 																	@; com no s'empra més no passa res.
 		add r3, sp, #4												@; R3 = dir mem residuo. No s'empra després, però cal indicar-ho per la subrutina div_mod.
 		mov r8, r0													@; Es salva el contingut de r0 (num1).
-		mov r0, #0x08												@; r0 = MAKE_Q13(1) << 13 per la crida de div mod.
+		mov r0, #0x04000000											@; r0 = MAKE_Q13(1) << 13 per la crida de div mod.
 		
 		and r12, r1, #MASK_SIGN										@; R12 = SIGNE DE R1, num2.
-		cmp r12, #0													@; Si R12 = 0, R0 > 0, si no, no.
-		beq .Lnotminus												@; num2 és positiu o negatiu ???
-		rsb r1, #0													@; num2 = - num2 en Ca2 (Q13)
+		cmp r12, #0													@; Si R12 = 0, R1 > 0, si no, no.
+		rsbne r1, #0												@; num2 = - num2 en Ca2 (Q13). Si no es negatiu, no cal fer-ho (predicació ne).
 		bl div_mod													@; Llamada a rutina div_mod().
-		ldr r1, [r2]												@; Es carrega de R2 1/num2.
-		rsb r1, #0													@; num2 = - num2 en Ca2 (Q13)
-		b .Lyetdivided												@; Es salta a l'etiqueta de divisió completada.
-.Lnotminus:
-		bl div_mod
-		ldr r1, [r2]
-.Lyetdivided:
-		@;Multiplicació de num1*(1/num2).
+		ldr r1, [r2]												@; Es carrega de R2 a R1 1/num2 (quocient divisió feta).
 		mov r0, r8													@; Es recupera num1 a r0. r1 ja té carregat 1/num2, i r2 té ja carregat
 																	@; una adreça de memòria (la del quocient). Com no es tornarà a consultar
 																	@; el cocient, es pot emprar aquesta mateixa direcció i sobreescriure-hi
 																	@; informació.
 		bl mul_Q13
-		ldrb r9, [r2]												@; Es carrega a r9 l'estat de l'overflow. 
+		cmp r12, #0													@; Es torna a comprovar si el signe original de num2 era negatiu
+		rsbne r0, #0												@; i en cas que ho fos, es canvia de signe el resultat final.
+		ldrb r9, [r2]												@; Es carrega a r9 l'estat de l'overflow retornat de mul_Q13 
 		add sp, #8													@; Es restaura l'estat de l'stack pointer (sp). Variables de la pila ja
 																	@; emprades.
 
 .LendDiv:
 		pop {r1, r2}												@; Es recupera l'adreça de *overflow (i num2 original per tal de recuperar
 																	@; correctament els valors de la pila).
-		strb r3, [r2]												@; *overflow = ov;
-		pop {r3, r10, pc}											@; Es fa el pop de la resta de valors de la pila i es retorna la funció.
+		strb r9, [r2]												@; *overflow = ov;
+		pop {r3, r9, pc}										@; Es fa el pop de la resta de valors de la pila i es retorna la funció.
 .end
