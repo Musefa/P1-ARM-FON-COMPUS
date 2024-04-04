@@ -99,8 +99,7 @@ avgmaxmin_city:
 															@; com no s'empra més no passa res.
 		mov r4, r3											@; R4 = R3 = *mmres
 		add r3, sp, #4										@; R3 = dir mem residuo. No s'empra després, però cal indicar-ho per la subrutina div_mod.
-		and r10, r0, #MASK_SIGN								@; R10 = SIGNE DE R0
-		cmp r10, #0											@; Si R10 = 0, R0 > 0, si no, no.
+		tst r0, #MASK_SIGN									@; Signe de R0, flag Z = 0, signe positiu, flag Z = 1, signe negatiu.
 		beq .Lnotminus										@; avg és positiu o negatiu ???
 		rsb r0, #0											@; avg = - avg en Ca2 (Q13)
 		bl div_mod											@; Llamada a rutina div_mod().
@@ -189,8 +188,7 @@ avgmaxmin_month:
 															@; com no s'empra més no passa res.
 		mov r4, r3											@; R4 = R3 = *mmres. Es perd l'índex de matriu però no s'emprarà més.
 		add r3, sp, #4										@; R3 = dir mem residuo. No s'empra després, però cal indicar-ho per la subrutina div_mod.
-		and r10, r0, #MASK_SIGN								@; R10 = SIGNE DE R0
-		cmp r10, #0											@; Si R10 = 0, R0 > 0, si no, no.
+		tst r0, #MASK_SIGN								@; R10 = SIGNE DE R0
 		beq .Lnotminus1										@; avg és positiu o negatiu ???
 		rsb r0, #0											@; avg = - avg en Ca2 (Q13)
 		bl div_mod											@; Llamada a rutina div_mod().

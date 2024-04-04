@@ -31,6 +31,7 @@ IMPORTANTISIMOOOOO:
         -   Preguntar por implementación de cambio de signo de la división en la segunda fase (en la tercera no hay otra opción).
         -   Uso de máscaras???
         -   PRUEBA DE -0.0 EN FASE 3 !!!!!!!
+        -   TST CON MASCARAS!!!!!!
 
 # ESTADO ACTUAL: Subrutinas de la fase 3 acabadas. Realizar pruebas, ensamblar librería de operaciones y adaptar fases 1 y 2 a código.
 

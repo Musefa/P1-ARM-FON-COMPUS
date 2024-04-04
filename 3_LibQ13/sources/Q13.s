@@ -107,9 +107,8 @@ mul_Q13:
 		@; ACABAR DE REVISAR COMENTARIS MULTIPLICACIÓ.
 		
 		
-		and r2, r0, #MASK_SIGN										@; S'analitza el signe del nombre resultat (primer signe del registre amb
+		tst r0, #MASK_SIGN											@; S'analitza el signe del nombre resultat (primer signe del registre amb
 																	@; els 32 bits baixos.
-		cmp r2, #0													@; Si r2 == 0, nombre positiu. Es deixa r3 tal qual.
 		mvnne r3, r3												@; S'inverteix r3 en cas que el nombre sigui negatiu. Si fos negatiu, tots
 																	@; els bits en r3 haurien d'estar a 1, per tant amb aquesta instrucció
 																	@; passaran a estar a 0.
@@ -155,8 +154,7 @@ div_Q13:
 		mov r8, r0													@; Es salva el contingut de r0 (num1).
 		mov r0, #0x04000000											@; r0 = MAKE_Q13(1) << 13 per la crida de div mod.
 		
-		and r12, r1, #MASK_SIGN										@; R12 = SIGNE DE R1, num2.
-		cmp r12, #0													@; Si R12 = 0, R1 > 0, si no, no.
+		tst r1, #MASK_SIGN											@; Signe de R1.
 		rsbne r1, #0												@; num2 = - num2 en Ca2 (Q13). Si no es negatiu, no cal fer-ho (predicació ne).
 		bl div_mod													@; Llamada a rutina div_mod().
 		ldr r1, [r2]												@; Es carrega de R2 a R1 1/num2 (quocient divisió feta).
