@@ -154,7 +154,8 @@ div_Q13:
 		mov r8, r0													@; Es salva el contingut de r0 (num1).
 		mov r0, #0x04000000											@; r0 = MAKE_Q13(1) << 13 per la crida de div mod.
 		
-		tst r1, #MASK_SIGN											@; Signe de R1.
+		and r12, r1, #MASK_SIGN										@; R12 = SIGNE DE R1, num2.
+		cmp r12, #0													@; Si R12 = 0, R1 > 0, si no, no.
 		rsbne r1, #0												@; num2 = - num2 en Ca2 (Q13). Si no es negatiu, no cal fer-ho (predicació ne).
 		bl div_mod													@; Llamada a rutina div_mod().
 		ldr r1, [r2]												@; Es carrega de R2 a R1 1/num2 (quocient divisió feta).
