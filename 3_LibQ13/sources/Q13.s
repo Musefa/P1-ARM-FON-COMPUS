@@ -139,9 +139,9 @@ mul_Q13:
 @;----------------------------------------------------------------
 	.global div_Q13
 div_Q13:
-		push {r1 - r3, r9, lr}									 
+		push {r1 - r6,  lr}									 
 		cmp r1, #0														
-		moveq r9, #1												@; divisor == 0 -> no divisible, infinito, ov = 1; S'empra r9 per
+		moveq r4, #1												@; divisor == 0 -> no divisible, infinito, ov = 1; S'empra r4 per
 																	@; reaprofitar millor després r3 (per la funció div_mod).
 		moveq r0, #0												@; Cocient igual a 0.
 		beq .LendDiv
@@ -151,28 +151,28 @@ div_Q13:
 		mov r2, sp													@; R2 = dir mem cociente. Per push anterior es pot fer aquesta operació. Es perd l'índex de posició, però
 																	@; com no s'empra més no passa res.
 		add r3, sp, #4												@; R3 = dir mem residuo. No s'empra després, però cal indicar-ho per la subrutina div_mod.
-		mov r8, r0													@; Es salva el contingut de r0 (num1).
+		mov r5, r0													@; Es salva el contingut de r0 (num1).
 		mov r0, #0x04000000											@; r0 = MAKE_Q13(1) << 13 per la crida de div mod.
 		
-		and r12, r1, #MASK_SIGN										@; R12 = SIGNE DE R1, num2.
-		cmp r12, #0													@; Si R12 = 0, R1 > 0, si no, no.
+		and r6, r1, #MASK_SIGN										@; R6 = SIGNE DE R1, num2.
+		cmp r6, #0													@; Si R6 = 0, R1 > 0, si no, no.
 		rsbne r1, #0												@; num2 = - num2 en Ca2 (Q13). Si no es negatiu, no cal fer-ho (predicació ne).
 		bl div_mod													@; Llamada a rutina div_mod().
 		ldr r1, [r2]												@; Es carrega de R2 a R1 1/num2 (quocient divisió feta).
-		mov r0, r8													@; Es recupera num1 a r0. r1 ja té carregat 1/num2, i r2 té ja carregat
+		mov r0, r5													@; Es recupera num1 a r0. r1 ja té carregat 1/num2, i r2 té ja carregat
 																	@; una adreça de memòria (la del quocient). Com no es tornarà a consultar
 																	@; el cocient, es pot emprar aquesta mateixa direcció i sobreescriure-hi
 																	@; informació.
 		bl mul_Q13
-		cmp r12, #0													@; Es torna a comprovar si el signe original de num2 era negatiu
+		cmp r6, #0													@; Es torna a comprovar si el signe original de num2 era negatiu
 		rsbne r0, #0												@; i en cas que ho fos, es canvia de signe el resultat final.
-		ldrb r9, [r2]												@; Es carrega a r9 l'estat de l'overflow retornat de mul_Q13 
+		ldrb r4, [r2]												@; Es carrega a r4 l'estat de l'overflow retornat de mul_Q13 
 		add sp, #8													@; Es restaura l'estat de l'stack pointer (sp). Variables de la pila ja
 																	@; emprades.
 
 .LendDiv:
 		pop {r1, r2}												@; Es recupera l'adreça de *overflow (i num2 original per tal de recuperar
 																	@; correctament els valors de la pila).
-		strb r9, [r2]												@; *overflow = ov;
-		pop {r3, r9, pc}										@; Es fa el pop de la resta de valors de la pila i es retorna la funció.
+		strb r4, [r2]												@; *overflow = ov;
+		pop {r3 - r6, pc}											@; Es fa el pop de la resta de valors de la pila i es retorna la funció.
 .end

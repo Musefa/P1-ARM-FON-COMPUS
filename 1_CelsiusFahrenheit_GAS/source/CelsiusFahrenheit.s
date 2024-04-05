@@ -22,6 +22,7 @@ Q13_9_5 = 0x0000399A
 Q13_5_9 = 0x000011C7
 Q13_32 = 0x00040000
 
+@;----------------------------------------------------------------------------
 @; Celsius2Fahrenheit(): converteix una temperatura en graus Celsius a la
 @;						temperatura equivalent en graus Fahrenheit, utilitzant
 @;						valors codificats en Coma Fixa 1:18:13.
@@ -29,6 +30,7 @@ Q13_32 = 0x00040000
 @;		input 	-> R0
 @;	Sortida:
 @;		R0 		-> output = (input * 9/5) + 32.0;
+@;----------------------------------------------------------------------------
 	.global Celsius2Fahrenheit
 Celsius2Fahrenheit:
 		push {r1 - r3, lr}												@; Es fa un push dels registres que no han de retornar cap valor i dels quals no es
@@ -80,7 +82,7 @@ Celsius2Fahrenheit:
 		pop {r1 - r3, pc}												@; Es fa un pop als registres emprats en la funció amb els valors previs a 
 																		@; l'execució d'aquesta i al pc per fer efectiu el retorn de la funció al main.
 
-
+@;----------------------------------------------------------------------------
 @; Fahrenheit2Celsius(): converteix una temperatura en graus Fahrenheit a la
 @;						temperatura equivalent en graus Celsius, utilitzant
 @;						valors codificats en Coma Fixa 1:18:13.
@@ -88,6 +90,7 @@ Celsius2Fahrenheit:
 @;		input 	-> R0
 @;	Sortida:
 @;		R0 		-> output = (input - 32.0) * 5/9;
+@;----------------------------------------------------------------------------
 	.global Fahrenheit2Celsius
 Fahrenheit2Celsius:
 		push {r1 - r3, lr}

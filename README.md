@@ -18,9 +18,10 @@ FASE 2:
 FASE 3:
     1.- JUSTIFICACIÓN COMENTARIOS PRODUCTO (mismo dilema que en FASE 1/2).
     2.- ADICION DE MASK_NUM VALIDA EN Q13.i???
-    3.- JUSTIFICAR MAKE_Q13(1.0) /// CALCULAR MAKE_Q13(1.0) << 13. Poner directamente el número calculado o calcular << 13 dentro del código???
+    3.- JUSTIFICAR MAKE_Q13(1.0) /// CALCULAR MAKE_Q13(1.0) << 13. Poner directamente el número calculado o calcular << 13 dentro del código??? PONER CONSTANTE.
     4.- LIB FONCOMPUS + STARTUP.o en TESTS???
     5.- DONDE GUARDAMOS LIBQ13.a, EN DIRECTORIO BASE???
+    6.- Me falla demo.c
     TO DO: Más pruebas (-0.0?????, USAR MASCARA DE BITS?????)
            Acabar de traduir fases 1 y 2 con nueva librería.
 
