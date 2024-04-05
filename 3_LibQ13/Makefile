@@ -8,7 +8,7 @@
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-# options for code generation
+#	options for code generation
 #-------------------------------------------------------------------------------
 ARCH	:= -march=armv5te -mlittle-endian
 INCL    := -I./includes
@@ -17,7 +17,7 @@ CCFLAGS	:= -Wall -gdwarf-3 -O0 $(ARCH) $(INCL)
 LDFLAGS := -z max-page-size=0x8000
 
 #-------------------------------------------------------------------------------
-# make commands
+#	libQ13 make commands
 #-------------------------------------------------------------------------------
 libQ13.a: build/Q13.o
 	arm-none-eabi-ar -rs libQ13.a build/Q13.o
@@ -26,13 +26,8 @@ build/Q13.o: sources/Q13.s includes/Q13.h
 	arm-none-eabi-as $(ASFLAGS) sources/Q13.s -o build/Q13.o
 
 #------------------------------------------------------------------------------
-#	CelsiusFahrenheit_lib commands
+#	CelsiusFahrenheit_lib make commands
 #------------------------------------------------------------------------------
-#Cal posar com a dependència libQ13.a ja que si es modifica en el projecte s'ha de tornar a generar la llibreria estàtica.
-demo_CelsiusFahrenheit_lib.elf : build/demo_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o libQ13.a
-	arm-none-eabi-ld $(LDFLAGS) build/demo_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o \
-						tests/startup.o libQ13.a tests/libfoncompus.a -o demo_CelsiusFahrenheit_lib.elf
-
 build/demo_CelsiusFahrenheit_lib.o: sources/demo_CelsiusFahrenheit_lib.s
 	arm-none-eabi-as $(ASFLAGS) sources/demo_CelsiusFahrenheit_lib.s \
 								-o build/demo_CelsiusFahrenheit_lib.o
@@ -40,17 +35,16 @@ build/demo_CelsiusFahrenheit_lib.o: sources/demo_CelsiusFahrenheit_lib.s
 build/CelsiusFahrenheit_lib.o: sources/CelsiusFahrenheit_lib.s includes/Q13.i
 	arm-none-eabi-as $(ASFLAGS) -c sources/CelsiusFahrenheit_lib.s -o build/CelsiusFahrenheit_lib.o
 
-#Cal posar com a dependència libQ13.a ja que si es modifica en el projecte s'ha de tornar a generar la llibreria estàtica.
-test_CelsiusFahrenheit_lib.elf : build/test_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o libQ13.a
-	arm-none-eabi-ld $(LDFLAGS) build/test_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o \
-						tests/startup.o libQ13.a tests/libfoncompus.a -o test_CelsiusFahrenheit_lib.elf
-
 build/test_CelsiusFahrenheit_lib.o: tests/test_CelsiusFahrenheit_lib.c includes/CelsiusFahrenheit.h includes/Q13.h
 	arm-none-eabi-gcc $(CCFLAGS) -c tests/test_CelsiusFahrenheit_lib.c -o build/test_CelsiusFahrenheit_lib.o
 
+#------------------------------------------------------------------------------
+#	avgmaxmintemp_lib make commands
+#------------------------------------------------------------------------------
+
 
 #-------------------------------------------------------------------------------
-# test making commands
+#	test making commands
 #-------------------------------------------------------------------------------
 test_Q13.elf : tests/test_Q13.c includes/Q13.h libQ13.a
 	arm-none-eabi-gcc $(CCFLAGS) -c tests/test_Q13.c -o build/test_Q13.o
@@ -61,10 +55,20 @@ demo.elf : tests/demo.c includes/Q13.h libQ13.a
 	arm-none-eabi-gcc $(CCFLAGS) -c tests/demo.c -o build/demo.o
 	arm-none-eabi-ld $(LDFLAGS) build/demo.o tests/startup.o \
 					libQ13.a tests/libfoncompus.a -o demo.elf
+					
+#Cal posar com a dependència libQ13.a ja que si es modifica en el projecte s'ha de tornar a generar la llibreria estàtica.
+test_CelsiusFahrenheit_lib.elf : build/test_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o libQ13.a
+	arm-none-eabi-ld $(LDFLAGS) build/test_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o \
+						tests/startup.o libQ13.a tests/libfoncompus.a -o test_CelsiusFahrenheit_lib.elf
+
+#Cal posar com a dependència libQ13.a ja que si es modifica en el projecte s'ha de tornar a generar la llibreria estàtica.
+demo_CelsiusFahrenheit_lib.elf : build/demo_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o libQ13.a
+	arm-none-eabi-ld $(LDFLAGS) build/demo_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o \
+						tests/startup.o libQ13.a tests/libfoncompus.a -o demo_CelsiusFahrenheit_lib.elf
 
 
 #-------------------------------------------------------------------------------
-# clean commands
+#	clean commands
 #-------------------------------------------------------------------------------
 clean : 
 	@rm -fv build/*
@@ -73,7 +77,7 @@ clean :
 
 
 #-----------------------------------------------------------------------------
-# run commands
+#	run commands
 #-----------------------------------------------------------------------------
 run : demo.elf
 	arm-eabi-insight demo.elf &
@@ -82,7 +86,7 @@ run_CelsiusFahrenheit_lib : demo_CelsiusFahrenheit_lib.elf
 	arm-eabi-insight demo_CelsiusFahrenheit_lib.elf &
 
 #-----------------------------------------------------------------------------
-# debug commands
+#	debug commands
 #-----------------------------------------------------------------------------
 debug : test_Q13.elf
 	arm-eabi-insight test_Q13.elf &

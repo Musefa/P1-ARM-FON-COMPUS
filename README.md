@@ -21,7 +21,8 @@ FASE 3:
     3.- JUSTIFICAR MAKE_Q13(1.0) /// CALCULAR MAKE_Q13(1.0) << 13. Poner directamente el número calculado o calcular << 13 dentro del código??? PONER CONSTANTE.
     4.- LIB FONCOMPUS + STARTUP.o en TESTS???
     5.- DONDE GUARDAMOS LIBQ13.a, EN DIRECTORIO BASE???
-    6.- Me falla demo.c
+    6.- libQ13.a antes de libfoncompus.a - explicacion????
+    7.- Se puede modificar el Makefile base de la fase 3 o solo añadir cosas???
     TO DO: Más pruebas (-0.0?????, USAR MASCARA DE BITS?????)
            Acabar de traduir fases 1 y 2 con nueva librería, hacer Makefile, revisar demo.o
 
@@ -33,6 +34,7 @@ IMPORTANTISIMOOOOO:
         -   Uso de máscaras???
         -   PRUEBA DE -0.0 EN FASE 3 !!!!!!!
         -   TST CON MASCARAS!!!!!!
+        -   OPTIMIZAR PROCESO CAMBIO DE SIGNO FASE 2 (y div_mod fase 3).
 
 # ESTADO ACTUAL: Subrutinas de la fase 3 acabadas. Realizar pruebas, ensamblar librería de operaciones y adaptar fases 1 y 2 a código.
 
