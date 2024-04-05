@@ -47,10 +47,12 @@ build/geotemp_lib.o : sources/geotemp_lib.c includes/Q13.h includes/divmod.h inc
 
 build/avgmaxmintemp_lib.o : sources/avgmaxmintemp_lib.s includes/avgmaxmintemp.i includes/Q13.i
 	arm-none-eabi-as $(ASFLAGS) sources/avgmaxmintemp_lib.s -o build/avgmaxmintemp_lib.o
-#Falta comanda per test_geotemp_lib.o
 
 build/data_lib.o : 	sources/data_lib.c includes/Q13.h includes/geotemp.h includes/data.h
 	arm-none-eabi-gcc $(CCFLAGS) sources/data_lib.c -o build/data_lib.o
+
+build/test_geotemp_lib.o : tests/test_geotemp_lib.c includes/Q13.h includes/avgmaxmintemp.h
+	arm-none-eabi-gcc $(CCFLAGS) tests/test_geotemp_lib.c -o build/test_geotemp_lib.o
 
 #-------------------------------------------------------------------------------
 #	test making commands
@@ -84,6 +86,12 @@ geotemp_lib.elf : build/avgmaxmintemp_lib.o build/geotemp_lib.o build/CelsiusFah
 						tests/startup.o libQ13.a tests/libfoncompus.a build/CelsiusFahrenheit_lib.o \
 						-o geotemp_lib.elf
 
+#Ídem de la regla anterior per aquesta regla.
+test_geotemp_lib.elf : build/test_geotemp_lib.o build/avgmaxmintemp_lib.o build/CelsiusFahrenheit_lib.o libQ13.a
+	arm-none-eabi-ld $(LDFLAGS) build/avgmaxmintemp_lib.o build/test_geotemp_lib.o \
+								tests/startup.o libQ13.a build/CelsiusFahrenheit_lib.o tests/libfoncompus.a \
+								-o test_geotemp_lib.elf
+
 
 #-------------------------------------------------------------------------------
 #	clean commands
@@ -113,3 +121,6 @@ debug : test_Q13.elf
 
 debug_CelsiusFahrenheit_lib : test_CelsiusFahrenheit_lib.elf
 	arm-eabi-insight test_CelsiusFahrenheit_lib.elf &
+	
+debug_avgmaxmintemp_lib : test_geotemp_lib.elf
+	arm-eabi-insight test_geotemp_lib.elf &

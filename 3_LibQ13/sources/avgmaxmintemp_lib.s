@@ -96,7 +96,7 @@ avgmaxmin_city:
 		strh r5, [r3, #MM_IDMIN]							@; mmres->id_min = idmin;
 		strh r6, [r3, #MM_IDMAX]							@; mmres->id_max = idmax;
 		mov r0, r10			
-		add sp, #4
+		add sp, #4											@; Es reestableix la pila i el punter a aquesta.
 		pop {r1 - r12, pc}
 		
 @;-----------------------------------------------------------------------------------
@@ -113,7 +113,66 @@ avgmaxmin_city:
 @;-----------------------------------------------------------------------------------
 	.global avgmaxmin_month
 avgmaxmin_month:
-		push {lr}
-		
-		pop {pc}
+		push {r1 - r12, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquest regitsre per accedir a la fila id_city.
+		mov r11, r0 										@; R11 = R0 = dir mem taula.
+		mov r12, #12										@; Temporalment, conté NC = 12 (mesos).
+		ldr r0, [r11, r2, lsl #2]							@; avg = ttemp[0][id_month]; Com fila = 0, es pot carregar la info directament amb la columna desitjada
+															@; amb un desplaçament a l'esquerra de dos bits aplicat (es multiplica per 4 el nombre ja que cada 
+															@; posició de la taula de Q13 ocupa 4 espais en memòria, 32 bits).														
+		mov r5, #0											@; R5 = idmin = 0;
+		mov r6, #0											@; R6 = idmax = 0;
+		mov r7, r0											@; R7 = max = avg;
+		mov r8, r0											@; R8 = min = avg;
+		mov r9, #1											@; R9 = i = 1;
+		mov r4, r2											@; R4 = índex d'avenç per la matriu. Comença en R4 = R2 = id_month.
+		sub sp, #4											@; Es reserva l'espai en memòria per la pila, per tal de poder cridar a add_Q13 dins del bucle i poder deixar l'estat
+															@; de l'overflow en alguna posició de memòria, i també per la posterior crida a div_Q13.
+		mov r2, sp											@; Es guarda en r2 la dir de mem per guardar l'overflow de les diferents rutines cridades de libQ13.a
+		mov r10, r1											@; Com en aquest cas si cal conservar nrows, a diferència de la rutina anterior, i es necessita r1, es 
+															@; carrega nrows a R10.
+.Lwhile:
+		cmp r9, r10																						
+		bhs .Lendwhile										@; i >= nrows --> s'acaba el bucle.		
+		add r4, r12											@; S'avança per la matriu NC (una fila).
+		ldr r1, [r11, r4, lsl #2]							@; R1 = tvar = ttemp[i][id_month]; De nou cal fer lsl pels 4 bytes a memòria de cada posició de la 
+															@; matriu de temperatures.
+		bl add_Q13											@; avg += tvar; Gràcies a l'organització prèvia dels registres, es pot cridar directament la rutina.
+		@; Condicional màxim.
+		cmp r1, r7
+		movgt r7, r1										@; tvar > max --> max = tvar;
+		movgt r6, r9										@; idmax = i;
+		@;Condicional mínim
+		cmp r1, r8
+		movlt r8, r1										@; tvar < min --> min = tvar;
+		movlt r5, r9										@; idmin = i;
+		add r9, #1											@; i++;
+		b .Lwhile											@; Es salta al principi del bucle while per comprovar si cal iterar o no.
+.Lendwhile:
+		mov r1, r10, lsl #13								@; Cal fer nrows << 13 per tal d'ajustar el valor per la divisió en Q13 (mirar documentació per justificació analítica).
+															@; Es torna a carregar el valor que s'havia guardar de R10 a R1.
+		tst r0, #MASK_SIGN									@; Signe de R0, flag Z = 0, signe positiu, flag Z = 1, signe negatiu.
+		beq .Lnotminus1										@; avg és positiu o negatiu ???
+		rsb r0, #0											@; avg = - avg en Ca2 (Q13)
+		bl div_Q13											@; Llamada a rutina div_mod().
+		rsb r10, r0, #0										@; avg = - avg en Ca2 (Q13). Es guarda en r10 perquè cal r0 per crides a les funcions de conversió de 
+															@; temperatures.
+		b .Lyetdivided1										@; Es salta a l'etiqueta de divisió completada.
+.Lnotminus1:
+		bl div_Q13
+		mov r10, r0											@; R10 = avg. Es guarda en r10 perquè cal r0 per crides a les funcions de conversió de temperatures.
+.Lyetdivided1:
+		@; El procés d'emmagatzemar valors en memòria i fer el retorn de la funció no canvia respecte amb la fase 2.
+		str r8, [r3, #MM_TMINC]								@; mmres->tmin_C = min;
+		str r7, [r3, #MM_TMAXC]								@; mmres->tmax_C = max;
+		mov r0, r8
+		bl Celsius2Fahrenheit								@; R0 = min (F)
+		str r0, [r3, #MM_TMINF]								@; mmres->tmin_F = Celsius2Fahrenheit(min);
+		mov r0, r7
+		bl Celsius2Fahrenheit								@; R0 = max (F)
+		str r0, [r3, #MM_TMAXF]								@; mmres->tmax_F = Celsius2Fahrenheit(max);
+		strh r5, [r3, #MM_IDMIN]							@; mmres->id_min = idmin;
+		strh r6, [r3, #MM_IDMAX]							@; mmres->id_max = idmax;
+		mov r0, r10			
+		add sp, #4											@; Es reestableix la pila i el punter a aquesta.
+		pop {r1 - r12, pc}
 .end

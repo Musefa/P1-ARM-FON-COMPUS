@@ -6,6 +6,7 @@ APUNTES:
 <p style="color:red">EN PROCESO</p>
 <p style="color:yellow">PREGUNTAR</p>
 <p style="color:orange">DOCUMENTAR</p>
+<p style="color:red">ERRORES DETECTADOS</p>
 FASE 1:
     <p style="color:orange">1.- HAY QUE ADJUNTAR EL CÁLCULO DE LAS CONSTANTES DE LA FASE 1 EN COMA FIJA EN EL DOCUMENTO Y EN LOS VÍDEOS.</p>
     <p style="color:green">2.- PREGUNTAR AL PROFE LONGITUD DE COMENTARIOS ADECUADA - PERFECTA.</p>
@@ -15,12 +16,12 @@ FASE 2:</p>
     <p style="color:yellow">3.- HAY QUE HACER UN .o DEL avgmaxmintemp.c O CON EL DEL avmaxmintemp.s BASTA???</p>
     <p style="color:orange">4.- DOCUMENTAR 12 EN COMA FIJA Q13 !!!!!!!</p>
     <p style="color:orange">5.- EN FER START DE NOU, CANVIEN LES DADES DE LA TAULA?????????? - LOAD PREVI NECESSARI, DOCUMENTAR..</p>
-    <p style="color:red">6.- INCLUDE DEL Q13.i??? (mascara de signo necesaria)?????</p>
-    <p style="color:red">7.- ADJUNTAR CÁLCULO DIVISIÓN Q13/ENTERO.</p>
+    <p style="color:blue">6.- INCLUDE DEL Q13.i??? (mascara de signo necesaria)?????</p>
+    <p style="color:blue">7.- ADJUNTAR CÁLCULO DIVISIÓN Q13/ENTERO.</p>
     <p style="color:yellow">8.- HACE FALTA DIVMOD.h en geotemp.c????</p>
-    <p style="color:red">9.- REVISAR COMENTARIOS.</p>
+    <p style="color:blue">9.- REVISAR COMENTARIOS.</p>
     <p style="color:orange">10.- Para documentación: Indicar el porqué del movimiento de la opción -c en el makefile a CCFLAGS.</p>
-    <p style="color:red">TO DO: Més proves.</p>
+    <p style="color:blue">TO DO: Més proves.</p>
     <p style="color:green">EXTRA: AUNQUE SEA INUTIL PONER -Lp_lib</p>
     <p styke="color:orange">OPTIMIZAR AVANCE FILAS AVGMAXMIN_CITY - HECHO Y JUSTIFICAR !!!!! (mla POR add).</p>
 FASE 3:</p>
@@ -31,13 +32,15 @@ FASE 3:</p>
     <p style="color:yellow">5.- DONDE GUARDAMOS LIBQ13.a, EN DIRECTORIO BASE???</p>
     <p style="color:yellow">6.- libQ13.a antes de libfoncompus.a - explicacion????</p>
     <p style="color:yellow">7.- Se puede modificar el Makefile base de la fase 3 o solo añadir cosas???</p>
-    <p style="color:red">8.- Revisar comentarios.</p>
+    <p style="color:blue">8.- Revisar comentarios.</p>
     <p style="color:orange">9.- DOCUMENTAR 12 en Q13!!!.</p>
     <p style="color:yellow">10.- Copiar archivos de cabeceras o llamar desde los archivos de la fase 2?</p>
     <p style="color:orange">11.- Para documentación: Indicar el porqué del movimiento de la opción -c en el makefile a CCFLAGS.</p>
     <p style="color:yellow">12.- Cal provar overflow???</p>
-    <p style="color:red">TO DO: Más pruebas (-0.0?????, USAR MASCARA DE BITS?????)</p>
-    <p style="color:red">Acabar de traduir fases 1 y 2 con nueva librería, hacer Makefile, revisar demo.o</p>
+    <p style="color:blue">TO DO: Más pruebas (-0.0?????, USAR MASCARA DE BITS?????)</p>
+    <p style="color:blue">Acabar de traduir fases 1 y 2 con nueva librería, hacer Makefile, revisar demo.o</p>
+    <p style="color:orange">Documentar el porqué de nrows << 13 (demostración analítica).</p>
+    <p style="color:red">ERROR GEOTEMP_LIB.c - Los cálculos y las funciones operan bien, diferenciacion por pocos números, puede ser por la precision???</p>
 
 IMPORTANTISIMOOOOO:
         -   JUSTIFICAR smull r1, r2, r0, r3 frente a smull r0, r1, r3, r0  POR EFICIENCIA TEMPORAL/DE EJECUCIÓN PARA FASE 1 (EN FASE 3 PLANTEAR COMPARACIÓN).
