@@ -99,6 +99,18 @@ avgmaxmin_city:
 		add sp, #4
 		pop {r1 - r12, pc}
 		
+@;-----------------------------------------------------------------------------------
+@;	avgmaxmin_month(): calcula la temperatura mitjana, màxima i mínima d'un mes
+@;				d'una taula de temperatures, amb una fila per ciutat i una
+@;				columna per mes, expressades en graus Celsius en format Q13.
+@;		Paràmetres:
+@;			R0 -> adreça de la taula de temperatures de 12 columnes i nrows files.
+@;			R1 -> nrows, número de files de la taula.
+@;			R2 -> id_month, índex del mes a processar, [0, 11].
+@;			R3 -> t_maxmin *mmres, adreça de l'estructura multicamp on es guarden
+@;				  les temperatures màximes i mínimes en Celsius i Fahrenheit, així
+@;				  com la posició on estan en la taula.
+@;-----------------------------------------------------------------------------------
 	.global avgmaxmin_month
 avgmaxmin_month:
 		push {lr}
