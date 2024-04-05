@@ -7,8 +7,7 @@
 @;	Programador 2: ivan.molinero@estudiants.urv.cat
 @;----------------------------------------------------------------
 
-@; Constants per facilitar l'accés a l'estructura multicamp "t_maxmin".
-.include "avgmaxmintemp.i"
+.include "avgmaxmintemp.i"									@; Constants per facilitar l'accés a l'estructura multicamp "t_maxmin".
 .include "Q13.i"
 
 .text
@@ -63,14 +62,14 @@
 
 	.global avgmaxmin_city
 avgmaxmin_city:
-		push {r1 - r12, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquest regitsre per accedir a la fila id_city.
-		mov r12, r0 										@; R12 = R0 = dir mem taula.
+		push {r1 - r11, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests regitres per accedir a la fila id_city.
+		mov r11, r0 										@; R11 = R0 = dir mem taula.
 		mov r1, #12											@; Com a mul no es poden emprar valors immediats, cal fer un mov previ. Es posa aquí per reaprofitar la crida a div_mod. 
 															@; Es "perd" nrows (queda a la pila) però com no s'empra més es pot obviar aquesta pèrdua.
 		mul r2, r1, r2										@; R2 = id_city * NC (12) -> es guarda en r2 el valor per accedir a aquella fila de la columna. Com al principi
 															@; es fa un push i al final un pop de r2, es pot deixar així aquest valor per evitar malgastar registres
 															@; i accedir de forma còmoda a la fila de la ciutat desitjada.
-		ldr r0, [r12, r2, lsl #2]							@; R0 = avg = ttemp[id_city][0]. lsl #2 perquè la taula és de Q13, on cada nombre ocupa 4 bytes a memòria,
+		ldr r0, [r11, r2, lsl #2]							@; R0 = avg = ttemp[id_city][0]. lsl #2 perquè la taula és de Q13, on cada nombre ocupa 4 bytes a memòria,
 															@; per tant lsl #2 multiplica l'índex per 4 per ajustar el valor desitjat correctament.
 		mov r5, #0											@; R5 = idmin = 0;
 		mov r6, #0											@; R6 = idmax = 0;
@@ -79,7 +78,7 @@ avgmaxmin_city:
 		mov r9, #1											@; R9 = i = 1;
 .Lfor:														@; Es pot dir .Lfor perquè en la següent subrutina s'empra .Lwhile.
 		add r4, r2, r9										@; R4 = id_city * NC (R2) + i (nº columna, nº mes).
-		ldr r10, [r12, r4, lsl #2]							@; R10 = tvar = ttemp[id_city][i], s'obté la temperatura del mes i + 1 de la ciutat. De nou s'ha d'emprar 
+		ldr r10, [r11, r4, lsl #2]							@; R10 = tvar = ttemp[id_city][i], s'obté la temperatura del mes i + 1 de la ciutat. De nou s'ha d'emprar 
 															@; lsl #2 pel tema de la estructura de la memòria emprada (4 bytes per dada).
 		add r0, r10											@; avg += tvar;
 		@; Condicional màxim.
@@ -122,7 +121,7 @@ avgmaxmin_city:
 		strh r6, [r4, #MM_IDMAX]							@; mmres->id_max = idmax;
 		mov r0, r10											@; Es recupera avg per fer el retorn a R0.		
 		add sp, #8											@; Es recupera l'espai a la pila per les variables locals emprades.
-		pop {r1 - r12, pc}
+		pop {r1 - r11, pc}
 
 @;-----------------------------------------------------------------------------------
 @;	avgmaxmin_month(): calcula la temperatura mitjana, màxima i mínima d'un mes
@@ -153,7 +152,7 @@ avgmaxmin_city:
 
 	.global avgmaxmin_month
 avgmaxmin_month:
-		push {r1 - r12, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquest regitsre per accedir a la fila id_city.
+		push {r1 - r12, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests registres per accedir a la fila id_city.
 		mov r12, r0 										@; R12 = R0 = dir mem taula.
 		mov r11, #12										@; Temporalment, conté NC = 12 (mesos).
 		ldr r0, [r12, r2, lsl#2]							@; avg = ttemp[0][id_month]; Com fila = 0, es pot carregar la info directament amb la columna desitjada
@@ -188,7 +187,7 @@ avgmaxmin_month:
 															@; com no s'empra més no passa res.
 		mov r4, r3											@; R4 = R3 = *mmres. Es perd l'índex de matriu però no s'emprarà més.
 		add r3, sp, #4										@; R3 = dir mem residuo. No s'empra després, però cal indicar-ho per la subrutina div_mod.
-		tst r0, #MASK_SIGN								@; R10 = SIGNE DE R0
+		tst r0, #MASK_SIGN									@; R10 = SIGNE DE R0
 		beq .Lnotminus1										@; avg és positiu o negatiu ???
 		rsb r0, #0											@; avg = - avg en Ca2 (Q13)
 		bl div_mod											@; Llamada a rutina div_mod().

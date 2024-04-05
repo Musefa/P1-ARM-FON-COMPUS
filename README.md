@@ -12,6 +12,9 @@ FASE 2:
     5.- EN FER START DE NOU, CANVIEN LES DADES DE LA TAULA?????????? - LOAD PREVI NECESSARI, DOCUMENTAR..
     6.- INCLUDE DEL Q13.i??? (mascara de signo necesaria)?????
     7.- ADJUNTAR CÁLCULO DIVISIÓN Q13/ENTERO.
+    8.- HACE FALTA DIVMOD.h en geotemp.c????
+    9.- REVISAR COMENTARIOS.
+    10.- Para documentación: Indicar el porqué del movimiento de la opción -c en el makefile a CCFLAGS.
     TO DO: Més proves.
     EXTRA: AUNQUE SEA INUTIL PONER -Lp_lib
     OPTIMIZAR AVANCE FILAS AVGMAXMIN_CITY - HECHO Y JUSTIFICAR !!!!! (mla POR add).
@@ -23,8 +26,13 @@ FASE 3:
     5.- DONDE GUARDAMOS LIBQ13.a, EN DIRECTORIO BASE???
     6.- libQ13.a antes de libfoncompus.a - explicacion????
     7.- Se puede modificar el Makefile base de la fase 3 o solo añadir cosas???
+    8.- Revisar comentarios.
+    9.- CALCULAR 12 en Q13 Y DOCUMENTAR!!!.
+    10.- Copiar archivos de cabeceras o llamar desde los archivos de la fase 2?
+    11.- Para documentación: Indicar el porqué del movimiento de la opción -c en el makefile a CCFLAGS.
     TO DO: Más pruebas (-0.0?????, USAR MASCARA DE BITS?????)
            Acabar de traduir fases 1 y 2 con nueva librería, hacer Makefile, revisar demo.o
+    12.- Cal provar overflow???
 
 IMPORTANTISIMOOOOO:
         -   JUSTIFICAR smull r1, r2, r0, r3 frente a smull r0, r1, r3, r0  POR EFICIENCIA TEMPORAL/DE EJECUCIÓN PARA FASE 1 (EN FASE 3 PLANTEAR COMPARACIÓN).

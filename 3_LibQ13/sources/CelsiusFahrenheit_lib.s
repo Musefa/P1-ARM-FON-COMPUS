@@ -78,3 +78,4 @@ Fahrenheit2Celsius:
 																@; pel retorn de la rutina.
 		add sp, #4												@; Es recupera l'espai emprat a la pila.
 		pop {r1, r2, pc}
+.end

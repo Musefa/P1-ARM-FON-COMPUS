@@ -5,6 +5,7 @@
 @;	Programador 2: ivan.molinero@estudiants.urv.cat
 @;----------------------------------------------------------------
 .include "Q13.i" 													@; Màscares Q13 en GAS.
+Q13_1_LSL_13 = 0x04000000											@; Constant de MAKE_Q13(1) << 13
 
 @;----------------------------------------------------------------
 @;	add_Q13(): calcula i retorna la suma de 2 operands codificats
@@ -122,7 +123,7 @@ mul_Q13:
 		pop {r2}													@; Es carrega la direcció de memòria de *overflow.
 		strb r3, [r2]												@; *overflow = ov;
 		
-		pop {r4, pc}
+		pop {r3, pc}
 
 @;----------------------------------------------------------------		
 @;	div_Q13: calcula i retorna la divisió dels 2 primers operands
@@ -152,7 +153,7 @@ div_Q13:
 																	@; com no s'empra més no passa res.
 		add r3, sp, #4												@; R3 = dir mem residuo. No s'empra després, però cal indicar-ho per la subrutina div_mod.
 		mov r5, r0													@; Es salva el contingut de r0 (num1).
-		mov r0, #0x04000000											@; r0 = MAKE_Q13(1) << 13 per la crida de div mod.
+		mov r0, #Q13_1_LSL_13										@; r0 = MAKE_Q13(1) << 13 per la crida de div mod.
 		
 		and r6, r1, #MASK_SIGN										@; R6 = SIGNE DE R1, num2.
 		cmp r6, #0													@; Si R6 = 0, R1 > 0, si no, no.
