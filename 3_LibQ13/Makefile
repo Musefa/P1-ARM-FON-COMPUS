@@ -28,19 +28,22 @@ build/Q13.o: sources/Q13.s includes/Q13.h
 #------------------------------------------------------------------------------
 #	CelsiusFahrenheit_lib commands
 #------------------------------------------------------------------------------
-demo_CelsiusFahrenheit_lib.elf : build/demo_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o 
+#Cal posar com a dependència libQ13.a ja que si es modifica en el projecte s'ha de tornar a generar la llibreria estàtica.
+demo_CelsiusFahrenheit_lib.elf : build/demo_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o libQ13.a
 	arm-none-eabi-ld $(LDFLAGS) build/demo_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o \
-						p_lib/startup.o -o demo_CelsiusFahrenheit_lib.elf
+						tests/startup.o libQ13.a tests/libfoncompus.a -o demo_CelsiusFahrenheit_lib.elf
 
 build/demo_CelsiusFahrenheit_lib.o: sources/demo_CelsiusFahrenheit_lib.s
-	arm-none-eabi-as $(ASFLAGS) sources/demo_CelsiusFahrenheit_lib.s -o build/demo_CelsiusFahrenheit_lib.o
+	arm-none-eabi-as $(ASFLAGS) sources/demo_CelsiusFahrenheit_lib.s \
+								-o build/demo_CelsiusFahrenheit_lib.o
 
 build/CelsiusFahrenheit_lib.o: sources/CelsiusFahrenheit_lib.s includes/Q13.i
 	arm-none-eabi-as $(ASFLAGS) -c sources/CelsiusFahrenheit_lib.s -o build/CelsiusFahrenheit_lib.o
 
-test_CelsiusFahrenheit_lib.elf : build/test_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o 
+#Cal posar com a dependència libQ13.a ja que si es modifica en el projecte s'ha de tornar a generar la llibreria estàtica.
+test_CelsiusFahrenheit_lib.elf : build/test_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o libQ13.a
 	arm-none-eabi-ld $(LDFLAGS) build/test_CelsiusFahrenheit_lib.o build/CelsiusFahrenheit_lib.o \
-						p_lib/startup.o -o test_CelsiusFahrenheit_lib.elf
+						tests/startup.o libQ13.a tests/libfoncompus.a -o test_CelsiusFahrenheit_lib.elf
 
 build/test_CelsiusFahrenheit_lib.o: tests/test_CelsiusFahrenheit_lib.c includes/CelsiusFahrenheit.h includes/Q13.h
 	arm-none-eabi-gcc $(CCFLAGS) -c tests/test_CelsiusFahrenheit_lib.c -o build/test_CelsiusFahrenheit_lib.o
@@ -76,7 +79,7 @@ run : demo.elf
 	arm-eabi-insight demo.elf &
 
 run_CelsiusFahrenheit_lib : demo_CelsiusFahrenheit_lib.elf
-	arm-eabi-insight demo_CelsiusFahrenheit.elf &
+	arm-eabi-insight demo_CelsiusFahrenheit_lib.elf &
 
 #-----------------------------------------------------------------------------
 # debug commands
@@ -85,4 +88,4 @@ debug : test_Q13.elf
 	arm-eabi-insight test_Q13.elf &
 
 debug_CelsiusFahrenheit_lib : test_CelsiusFahrenheit_lib.elf
-	arm-eabi-insight test_CelsiusFahrenheit.elf &
+	arm-eabi-insight test_CelsiusFahrenheit_lib.elf &
