@@ -1,6 +1,6 @@
 # P1-ARM-FON-COMPUS
 <img alt="Static Badge" src="https://img.shields.io/badge/status-not_started-red"> <!-- Not started -->
-Pràctica 1 - ARM - Fonaments de Computadors<br>
+<h2>Pràctica 1 - ARM - Fonaments de Computadors</h2>
 APUNTES:
 <p style="color:green">CORREGIDO</p>
 <p style="color:red">EN PROCESO</p>
