@@ -41,7 +41,7 @@ build/test_CelsiusFahrenheit_lib.o: tests/test_CelsiusFahrenheit_lib.c includes/
 #------------------------------------------------------------------------------
 #	avgmaxmintemp_lib make commands
 #------------------------------------------------------------------------------
-
+build/avgmaxmin
 
 #-------------------------------------------------------------------------------
 #	test making commands
