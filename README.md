@@ -23,7 +23,7 @@ FASE 3:
     5.- DONDE GUARDAMOS LIBQ13.a, EN DIRECTORIO BASE???
     6.- Me falla demo.c
     TO DO: Más pruebas (-0.0?????, USAR MASCARA DE BITS?????)
-           Acabar de traduir fases 1 y 2 con nueva librería.
+           Acabar de traduir fases 1 y 2 con nueva librería, hacer Makefile, revisar demo.o
 
 IMPORTANTISIMOOOOO:
         -   JUSTIFICAR smull r1, r2, r0, r3 frente a smull r0, r1, r3, r0  POR EFICIENCIA TEMPORAL/DE EJECUCIÓN PARA FASE 1 (EN FASE 3 PLANTEAR COMPARACIÓN).
