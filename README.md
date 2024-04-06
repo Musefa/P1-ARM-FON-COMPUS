@@ -7,10 +7,10 @@ APUNTES:
 <p style="color:yellow">PREGUNTAR</p>
 <p style="color:orange">DOCUMENTAR</p>
 <p style="color:red">ERRORES DETECTADOS</p>
-FASE 1:
+<h3>FASE 1:</h3>
     <p style="color:orange">1.- HAY QUE ADJUNTAR EL CÁLCULO DE LAS CONSTANTES DE LA FASE 1 EN COMA FIJA EN EL DOCUMENTO Y EN LOS VÍDEOS.</p>
     <p style="color:green">2.- PREGUNTAR AL PROFE LONGITUD DE COMENTARIOS ADECUADA - PERFECTA.</p>
-FASE 2:</p>
+<h3>FASE 2:</h3>
     <p style="color:green">1.- OPTIMIZAR INCLUDES???????? - JA OPTIMITZAT, NO TOCAR RES.</p>
     <p style="color:yellow">2.- DEPENDENCIAS DEL build/geotemp.o CORRECTAS O HACER -I./include (avgmaxmintemp.i???).</p>
     <p style="color:yellow">3.- HAY QUE HACER UN .o DEL avgmaxmintemp.c O CON EL DEL avmaxmintemp.s BASTA???</p>
@@ -24,7 +24,7 @@ FASE 2:</p>
     <p style="color:blue">TO DO: Més proves.</p>
     <p style="color:green">EXTRA: AUNQUE SEA INUTIL PONER -Lp_lib</p>
     <p styke="color:orange">OPTIMIZAR AVANCE FILAS AVGMAXMIN_CITY - HECHO Y JUSTIFICAR !!!!! (mla POR add).</p>
-FASE 3:</p>
+<h3>FASE 3:</h3>
     <p style="color:green">1.- JUSTIFICACIÓN COMENTARIOS PRODUCTO (mismo dilema que en FASE 1/2).</p>
     <p style="color:yellow">2.- ADICION DE MASK_NUM VALIDA EN Q13.i???</p>
     <p style="color:yellow">3.- JUSTIFICAR MAKE_Q13(1.0) /// CALCULAR MAKE_Q13(1.0) << 13. Poner directamente el número calculado o calcular << 13 dentro del código??? PONER CONSTANTE.</p>
