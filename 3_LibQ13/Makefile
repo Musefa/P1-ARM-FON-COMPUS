@@ -1,8 +1,5 @@
 #-------------------------------------------------------------------------------
-# Example Makefile to build a library and to test the functions of each module
-# Authors: Santiago Romaní, Pere Millán
-# Date: April 2021, March 2022, March 2023, March 2024
-#-------------------------------------------------------------------------------
+#	MAKEFILE FASE 3 PRACTICA ARM
 #	Programador/a 1: eric.garcia@estudiants.urv.cat
 #	Programador/a 2: ivan.molinero@estudiants.urv.cat
 #-------------------------------------------------------------------------------
@@ -16,14 +13,16 @@ ASFLAGS	:= $(ARCH) $(INCL) -g
 CCFLAGS	:= -Wall -gdwarf-3 -O0 $(ARCH) $(INCL) -c
 LDFLAGS := -z max-page-size=0x8000
 
+
 #-------------------------------------------------------------------------------
 #	libQ13 make commands
 #-------------------------------------------------------------------------------
-libQ13.a: build/Q13.o
+libQ13.a: build/Q13.o includes/Q13.i
 	arm-none-eabi-ar -rs libQ13.a build/Q13.o
 
-build/Q13.o : sources/Q13.s includes/Q13.h
+build/Q13.o : sources/Q13.s includes/Q13.i
 	arm-none-eabi-as $(ASFLAGS) sources/Q13.s -o build/Q13.o
+
 
 #------------------------------------------------------------------------------
 #	CelsiusFahrenheit_lib make commands
@@ -53,6 +52,7 @@ build/data_lib.o : 	sources/data_lib.c includes/Q13.h includes/geotemp.h include
 
 build/test_geotemp_lib.o : tests/test_geotemp_lib.c includes/Q13.h includes/avgmaxmintemp.h
 	arm-none-eabi-gcc $(CCFLAGS) tests/test_geotemp_lib.c -o build/test_geotemp_lib.o
+
 
 #-------------------------------------------------------------------------------
 #	test making commands
@@ -113,6 +113,8 @@ run_CelsiusFahrenheit_lib : demo_CelsiusFahrenheit_lib.elf
 
 run_avgmaxmintemp_lib : geotemp_lib.elf
 	arm-eabi-insight geotemp_lib.elf &
+
+
 #-----------------------------------------------------------------------------
 #	debug commands
 #-----------------------------------------------------------------------------

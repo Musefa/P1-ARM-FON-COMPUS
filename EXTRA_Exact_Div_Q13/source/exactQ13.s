@@ -1,5 +1,6 @@
 @;----------------------------------------------------------------
-@;	Q13.s: rutines aritmètiques en format coma fixa 1:18:13.
+@;	exactQ13.s: rutines aritmètiques en format coma fixa 1:18:13 i 
+@;	amb la rutina de divisió implementada de manera más exacta.
 @;----------------------------------------------------------------
 @;	Programador 1: eric.garcia@estudiants.urv.cat
 @;	Programador 2: ivan.molinero@estudiants.urv.cat
@@ -45,7 +46,6 @@ add_Q13:
 @;				   retorna són els bits baixos del resultat.
 @;		RESULTAT -> R0 = resta dels dos nombres.
 @;----------------------------------------------------------------	
-
 	.global sub_Q13
 sub_Q13:
 		push {r3, lr}
@@ -126,9 +126,9 @@ mul_Q13:
 		pop {r3, pc}
 
 @;----------------------------------------------------------------		
-@;	div_Q13: calcula i retorna la divisió dels 2 primers operands
-@;           codificats en coma fixa 1:18:13, i indica si s'ha
-@;			 produït overflow o no
+@;	exact_div_Q13: calcula i retorna la divisió dels 2 primers 
+@;           operands codificats en coma fixa 1:18:13, emprant una
+@;			 metodologia de càlcul més exacta.
 @;		PARÀMETRES:
 @;			R0 -> num1, codificat en coma fixa 1:18:13
 @;			R1 -> num2, codificat en coma fixa 1:18:13
@@ -138,43 +138,80 @@ mul_Q13:
 @;				   retorna són els bits baixos del resultat.
 @;		RESULTAT -> R0 = divisió dels dos nombres.
 @;----------------------------------------------------------------
-	.global div_Q13
-div_Q13:
-		push {r1 - r6,  lr}											@; Es fa push de r1 perquè pot patir modificacions, i de r2 per fer un pop final i recuperar l'adreça
-																	@; abans de la càrrega a memòria.
-		cmp r1, #0														
-		moveq r4, #1												@; divisor == 0 -> no divisible, infinito, ov = 1; S'empra r4 per
-																	@; reaprofitar millor després r3 (per la funció div_mod).
-		moveq r0, #0												@; Cocient igual a 0.
-		beq .LendDiv
-		@; Inversió de num2.
-		@; No s'inicialitza ov perquè quedarà ja inicialitzat a posteriori, amb el resultat de mul_Q13.
-		sub sp, #8													@; Es reserva espai a la pila per dos variables locals, pel quo i mod de la subrutina div_mod.
-		mov r2, sp													@; R2 = dir mem cociente. Per push anterior es pot fer aquesta operació. Es perd l'índex de posició, però
-																	@; com no s'empra més no passa res.
-		add r3, sp, #4												@; R3 = dir mem residuo. No s'empra després, però cal indicar-ho per la subrutina div_mod.
-		mov r5, r0													@; Es salva el contingut de r0 (num1).
-		mov r0, #Q13_1_LSL_13										@; r0 = MAKE_Q13(1) << 13 per la crida de div mod.
+		.global exact_div_Q13
+exact_div_Q13:
+		push {r1 - r12, lr}
+		cmp r1, #0													@; num2 == 0???
+		moveq r0, #0
+		moveq r4, #1												@; r4 = estat overflow = 1 (divisió per 0).
+		beq .Lcontinue
+		@; Es treballarà amb valors absoluts per facilitar la tasca. Al final es modifica el resultat en cas que un dels dos sigui negatiu.
+		and r10, r0, #MASK_SIGN										@; r10 = Signe de r0.
+		cmp r10, #0
+		rsbne r0, #0												@; abs_value(num1)
+		and r11, r1, #MASK_SIGN										@; r11 = Signe de r1.
+		cmp r11, #0
+		rsbne r1, #0												@; abs_value(num2)
+		push {r10, r11}												@; Es guarden r10 i r11 a la pila per tenir més registres disponibles,
+																	@; ja que no cal accedir a aquests valors fins al final de la rutina.
+		mov r4, #0													@; Estat overflow = 0.
+		sub sp, #8													@; Es reserva espai a memòria pel quocient i residu per div_mod.
+		mov r9, r2													@; Es guarda l'adreça de memòria de l'estat d'overflow.
+		mov r2, sp
+		add r3, sp, #4												@; Variables locals en pila.
+		mov r12, #8192												@; r12 = 2^13, codificable com a valor immediat (un únic bit desplaçat).
+		umull r7, r0, r12, r0										@; num1 * 2^13. r0 = RHi, r7 = RLo
+		cmp r0, #0
+		beq .Lonly32												@; RHi està buit, no cal entrar en un bucle de divisió per un nombre de
+																	@; 64 bits.
+																	
 		
-		and r6, r1, #MASK_SIGN										@; R6 = SIGNE DE R1, num2.
-		cmp r6, #0													@; Si R6 = 0, R1 > 0, si no, no.
-		rsbne r1, #0												@; num2 = - num2 en Ca2 (Q13). Si no es negatiu, no cal fer-ho (predicació ne).
-		bl div_mod													@; Llamada a rutina div_mod().
-		ldr r1, [r2]												@; Es carrega de R2 a R1 1/num2 (quocient divisió feta).
-		mov r0, r5													@; Es recupera num1 a r0. r1 ja té carregat 1/num2, i r2 té ja carregat
-																	@; una adreça de memòria (la del quocient). Com no es tornarà a consultar
-																	@; el cocient, es pot emprar aquesta mateixa direcció i sobreescriure-hi
-																	@; informació.
-		bl mul_Q13
-		cmp r6, #0													@; Es torna a comprovar si el signe original de num2 era negatiu
-		rsbne r0, #0												@; i en cas que ho fos, es canvia de signe el resultat final.
-		ldrb r4, [r2]												@; Es carrega a r4 l'estat de l'overflow retornat de mul_Q13 
-		add sp, #8													@; Es restaura l'estat de l'stack pointer (sp). Variables de la pila ja
-																	@; emprades.
-
-.LendDiv:
-		pop {r1, r2}												@; Es recupera l'adreça de *overflow (i num2 original per tal de recuperar
-																	@; correctament els valors de la pila).
-		strb r4, [r2]												@; *overflow = ov;
-		pop {r3 - r6, pc}											@; Es fa el pop de la resta de valors de la pila i es retorna la funció.
+		mov r10, #0													@; r10 = final_result.
+		clz r5, r0													@; r5 = num_zeros(r0/RHi)
+		rsb r5, #64													@; Nombre de bits ocupats als dos registres (RHi i RLo).
+		mov r6, #2													@; índex bucle for, i = 1;
+.Lforbig:
+		cmp r1, r0
+		bls .Lfinforbig
+		@;Desplaçament lògic de bits a l'esquerra del nombre de 64 bits. S'avança de bit en bit per controlar el fi del bucle.
+		mov r0, r0, lsl #1											@; Es desplacen tots els bits amb valor de r0 a l'esquerra de tot el nombre.
+		orr r0, r7, lsr #(32-1)										@; Inserció dels bits de RLo a RHi.
+		mov r7, r7, lsl #1
+		add r6, #1
+		b .Lforbig
+.Lfinforbig:
+.Lfor:
+		cmp r6, r5
+		bhs .Lfinfor												@; El bucle s'acaba quan i >= nbits_ocupats.
+		bl div_mod													@; Es crida a la rutina de divisió.
+		@; Preparació del dividend.
+		ldr r0, [r3]												@; Es guarda el residu en r0.
+		ldr r8, [r2]												@; Es guarda en r8 el residu.		
+		@;Desplaçament lògic de bits a l'esquerra del nombre de 64 bits. S'avança de bit en bit per controlar el fi del bucle.
+		mov r0, r0, lsl #1											@; Es desplacen tots els bits amb valor de r0 a l'esquerra de tot el nombre.
+		orr r0, r7, lsr #(32-1)										@; Inserció dels bits de RLo a RHi.
+		mov r7, r7, lsl #1											@; Es desplacen r5 bits a per tal de continuar amb la divisió.
+		@; Inserció del quocient de la iteració en el resultat final.
+		mov r10, r10, lsl #1										@; Es mou el resultat final r11 bits a l'esquerra per insertar el quocient.
+		orr r10, r8													@; S'incorpora el quocient de la iteració al resultat final.
+		add r6, #1													@; i++;
+		b .Lfor
+.Lfinfor:
+		b .Lcontinue												@; Divisió feta, es salta l'espai dedicat a la divisió per un nombre de
+																	@; 32 bits.
+.Lonly32:
+		bl div_mod													@; Es salta a la rutina div mod. Els registres tenen els valors adients.
+		str r10, [r2]												@; Es salva el quocient en r0.
+.Lcontinue:
+		add sp, #8													@; Es restaura l'espai en pila.
+		mov r0, r10
+		pop {r10, r11}												@; Es recupera els signes de num1 i num2 originals.
+		cmp r10, #0
+		beq .Lresultpositive
+		cmp r10, r11
+		rsbeq r0, #0												@; Si Sign(num1) == Sign(num2) i Sign(num1) = negatiu, el resultat és positiu; en cas contrari,
+																	@; negatiu.
+.Lresultpositive:
+		strb r4, [r9]												@; Es guarda l'estat de l'overflow.
+		pop {r1 - r12, pc}
 .end
