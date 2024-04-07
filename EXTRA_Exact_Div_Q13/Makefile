@@ -39,6 +39,9 @@ build/data_exact_lib.o : source/data_exact_lib.c includes/Q13.h includes/geotemp
 build/CelsiusFahrenheit_exact_lib.o : source/CelsiusFahrenheit_exact_lib.s includes/Q13.i
 	arm-none-eabi-as $(ASFLAGS) source/CelsiusFahrenheit_exact_lib.s -o build/CelsiusFahrenheit_exact_lib.o
 
+build/test_geotemp_exact_lib.o : tests/test_geotemp_exact_lib.c includes/Q13.h includes/avgmaxmintemp.h
+	arm-none-eabi-gcc $(CCFLAGS) tests/test_geotemp_exact_lib.c -o build/test_geotemp_exact_lib.o
+
 
 #-------------------------------------------------------------------------------
 #	test making commands
@@ -48,6 +51,11 @@ geotemp_exact_lib.elf : build/CelsiusFahrenheit_exact_lib.o build/geotemp_exact_
 						tests/startup.o xlibQ13.a tests/libfoncompus.a build/CelsiusFahrenheit_exact_lib.o \
 						-o geotemp_exact_lib.elf
 
+test_geotemp_exact_lib.elf : build/CelsiusFahrenheit_exact_lib.o build/test_geotemp_exact_lib.o build/avgmaxmintemp_exact_lib.o xlibQ13.a
+	arm-none-eabi-ld $(LDFLAGS) build/test_geotemp_exact_lib.o build/avgmaxmintemp_exact_lib.o \
+						tests/startup.o xlibQ13.a tests/libfoncompus.a build/CelsiusFahrenheit_exact_lib.o \
+						-o test_geotemp_exact_lib.elf
+
 
 #-------------------------------------------------------------------------------
 #	clean commands
@@ -55,7 +63,7 @@ geotemp_exact_lib.elf : build/CelsiusFahrenheit_exact_lib.o build/geotemp_exact_
 clean : 
 	@rm -fv build/*
 	@rm -fv *.elf
-	@rm -fv libQ13.a
+	@rm -fv xlibQ13.a
 	
 
 #-----------------------------------------------------------------------------
@@ -63,4 +71,10 @@ clean :
 #-----------------------------------------------------------------------------
 run : geotemp_exact_lib.elf
 	arm-eabi-insight geotemp_exact_lib.elf &
-
+	
+	
+#-----------------------------------------------------------------------------
+#	debug commands
+#-----------------------------------------------------------------------------
+debug : test_geotemp_exact_lib.elf
+	arm-eabi-insight test_geotemp_exact_lib.elf &

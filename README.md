@@ -42,7 +42,9 @@ APUNTES:
     <p style="color:orange">Documentar el porqué de nrows << 13 (demostración analítica).</p>
     <p style="color:red">ERROR GEOTEMP_LIB.c - Los cálculos y las funciones operan bien, diferenciacion por pocos números, puede ser por la precision???</p>
 <h3>FASE EXTRA</h3>
-    <p style="color:purple">PROBLEMA EN EL NÚMERO DE ITERACIONES A REALIZAR - REVISAR QUE PASA CON PRUEBA 3</p>
+    <p style="color:purple">Acabar de revisar comentarios + hacer pruebas</p>
+<h3>ARCHIVOS TESTING</h3>
+    <p style="color:purple">Ampliar pruebas fase 2 + incorporar en fase 3 + fase extra (copiar los archivos de testing + modificar nombres para que concuerden con el makefile)</p>
 
 IMPORTANTISIMOOOOO:
         -   JUSTIFICAR smull r1, r2, r0, r3 frente a smull r0, r1, r3, r0  POR EFICIENCIA TEMPORAL/DE EJECUCIÓN PARA FASE 1 (EN FASE 3 PLANTEAR COMPARACIÓN).

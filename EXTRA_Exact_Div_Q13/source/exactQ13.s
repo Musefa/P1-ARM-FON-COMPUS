@@ -165,11 +165,9 @@ exact_div_Q13:
 		beq .Lonly32												@; RHi està buit, no cal entrar en un bucle de divisió per un nombre de
 																	@; 64 bits.
 																	
-		
 		mov r10, #0													@; r10 = final_result.
-		clz r5, r0													@; r5 = num_zeros(r0/RHi)
-		rsb r5, #64													@; Nombre de bits ocupats als dos registres (RHi i RLo).
-		mov r6, #2													@; índex bucle for, i = 1;
+		mov r5, #32													@; Es fan 32 iteracions, fins finalitzar el primer registre.
+		mov r6, #0													@; índex bucle for, i = 1;
 .Lforbig:
 		cmp r1, r0
 		bls .Lfinforbig
@@ -182,7 +180,7 @@ exact_div_Q13:
 .Lfinforbig:
 .Lfor:
 		cmp r6, r5
-		bhs .Lfinfor												@; El bucle s'acaba quan i >= nbits_ocupats.
+		bhi .Lfinfor												@; El bucle s'acaba quan i > 32.
 		bl div_mod													@; Es crida a la rutina de divisió.
 		@; Preparació del dividend.
 		ldr r0, [r3]												@; Es guarda el residu en r0.
@@ -200,8 +198,9 @@ exact_div_Q13:
 		b .Lcontinue												@; Divisió feta, es salta l'espai dedicat a la divisió per un nombre de
 																	@; 32 bits.
 .Lonly32:
+		mov r0, r7													@; r0 (RHi) = r7 (RLo). Necessari per crida a div_mod.
 		bl div_mod													@; Es salta a la rutina div mod. Els registres tenen els valors adients.
-		str r10, [r2]												@; Es salva el quocient en r0.
+		ldr r10, [r2]												@; Es salva el quocient en r0.
 .Lcontinue:
 		add sp, #8													@; Es restaura l'espai en pila.
 		mov r0, r10
