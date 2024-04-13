@@ -140,7 +140,7 @@ mul_Q13:
 @;----------------------------------------------------------------
 	.global div_Q13
 div_Q13:
-		push {r1 - r6,  lr}											@; Es fa push de r1 perquè pot patir modificacions, i de r2 per fer un pop final i recuperar l'adreça
+		push {r1 - r6, lr}											@; Es fa push de r1 perquè pot patir modificacions, i de r2 per fer un pop final i recuperar l'adreça
 																	@; abans de la càrrega a memòria.
 		cmp r1, #0														
 		moveq r4, #1												@; divisor == 0 -> no divisible, infinito, ov = 1; S'empra r4 per

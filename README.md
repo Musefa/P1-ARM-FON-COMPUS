@@ -26,17 +26,16 @@ APUNTES:
     <p styke="color:orange">OPTIMIZAR AVANCE FILAS AVGMAXMIN_CITY - HECHO Y JUSTIFICAR !!!!! (mla POR add).</p>
 <h3>FASE 3:</h3>
     <p style="color:green">1.- JUSTIFICACIÓN COMENTARIOS PRODUCTO (mismo dilema que en FASE 1/2).</p>
-    <p style="color:yellow">2.- ADICION DE MASK_NUM VALIDA EN Q13.i???</p>
-    <p style="color:yellow">3.- JUSTIFICAR MAKE_Q13(1.0) /// CALCULAR MAKE_Q13(1.0) << 13. Poner directamente el número calculado o calcular << 13 dentro del código??? PONER CONSTANTE.</p>
-    <p style="color:yellow">4.- LIB FONCOMPUS + STARTUP.o en TESTS???</p>
-    <p style="color:yellow">5.- DONDE GUARDAMOS LIBQ13.a, EN DIRECTORIO BASE???</p>
-    <p style="color:yellow">6.- libQ13.a antes de libfoncompus.a - explicacion????</p>
-    <p style="color:yellow">7.- Se puede modificar el Makefile base de la fase 3 o solo añadir cosas???</p>
-    <p style="color:blue">8.- Revisar comentarios.</p>
-    <p style="color:orange">9.- DOCUMENTAR 12 en Q13!!!.</p>
-    <p style="color:yellow">10.- Copiar archivos de cabeceras o llamar desde los archivos de la fase 2?</p>
-    <p style="color:orange">11.- Para documentación: Indicar el porqué del movimiento de la opción -c en el makefile a CCFLAGS.</p>
-    <p style="color:yellow">12.- Cal provar overflow???</p>
+    <p style="color:yellow">2.- JUSTIFICAR MAKE_Q13(1.0) /// CALCULAR MAKE_Q13(1.0) << 13. Poner directamente el número calculado o calcular << 13 dentro del código??? PONER CONSTANTE.</p>
+    <p style="color:yellow">3.- LIB FONCOMPUS + STARTUP.o en TESTS???</p>
+    <p style="color:yellow">4.- DONDE GUARDAMOS LIBQ13.a, EN DIRECTORIO BASE???</p>
+    <p style="color:yellow">5.- libQ13.a antes de libfoncompus.a - explicacion????</p>
+    <p style="color:yellow">6.- Se puede modificar el Makefile base de la fase 3 o solo añadir cosas???</p>
+    <p style="color:blue">7.- Revisar comentarios.</p>
+    <p style="color:orange">8.- DOCUMENTAR 12 en Q13!!!.</p>
+    <p style="color:yellow">9.- Copiar archivos de cabeceras o llamar desde los archivos de la fase 2?</p>
+    <p style="color:orange">10.- Para documentación: Indicar el porqué del movimiento de la opción -c en el makefile a CCFLAGS.</p>
+    <p style="color:yellow">11.- Cal provar overflow???</p>
     <p style="color:blue">TO DO: Más pruebas (-0.0?????, USAR MASCARA DE BITS?????)</p>
     <p style="color:blue">Acabar de traduir fases 1 y 2 con nueva librería, hacer Makefile, revisar demo.o</p>
     <p style="color:orange">Documentar el porqué de nrows << 13 (demostración analítica).</p>

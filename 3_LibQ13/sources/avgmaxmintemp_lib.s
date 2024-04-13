@@ -62,7 +62,7 @@ avgmaxmin_city:
 		bl add_Q13											@; avg += tvar; Gràcies a l'organització prèvia dels registres, es pot cridar directament la rutina.
 		@; Condicional màxim.
 		cmp r1, r7
-		movgt r7, r1									@; tvar > max --> max = tvar;
+		movgt r7, r1										@; tvar > max --> max = tvar;
 		movgt r6, r9										@; idmax = i;
 		@;Condicional mínim
 		cmp r1, r8
@@ -113,9 +113,8 @@ avgmaxmin_city:
 @;-----------------------------------------------------------------------------------
 	.global avgmaxmin_month
 avgmaxmin_month:
-		push {r1 - r12, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquest regitsre per accedir a la fila id_city.
+		push {r1 - r11, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquest regitsre per accedir a la fila id_city.
 		mov r11, r0 										@; R11 = R0 = dir mem taula.
-		mov r12, #12										@; Temporalment, conté NC = 12 (mesos).
 		ldr r0, [r11, r2, lsl #2]							@; avg = ttemp[0][id_month]; Com fila = 0, es pot carregar la info directament amb la columna desitjada
 															@; amb un desplaçament a l'esquerra de dos bits aplicat (es multiplica per 4 el nombre ja que cada 
 															@; posició de la taula de Q13 ocupa 4 espais en memòria, 32 bits).														
@@ -133,7 +132,7 @@ avgmaxmin_month:
 .Lwhile:
 		cmp r9, r10																						
 		bhs .Lendwhile										@; i >= nrows --> s'acaba el bucle.		
-		add r4, r12											@; S'avança per la matriu NC (una fila).
+		add r4, #12											@; S'avança per la matriu NC (una fila).
 		ldr r1, [r11, r4, lsl #2]							@; R1 = tvar = ttemp[i][id_month]; De nou cal fer lsl pels 4 bytes a memòria de cada posició de la 
 															@; matriu de temperatures.
 		bl add_Q13											@; avg += tvar; Gràcies a l'organització prèvia dels registres, es pot cridar directament la rutina.
@@ -174,5 +173,5 @@ avgmaxmin_month:
 		strh r6, [r3, #MM_IDMAX]							@; mmres->id_max = idmax;
 		mov r0, r10			
 		add sp, #4											@; Es reestableix la pila i el punter a aquesta.
-		pop {r1 - r12, pc}
+		pop {r1 - r11, pc}
 .end

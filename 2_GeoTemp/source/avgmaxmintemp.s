@@ -13,7 +13,9 @@
 .text
 		.align 2
 		.arm
-		
+@; Capçalera de la rutina div_mod (necessària per conèixer els registres que calen
+@; emprar pel pas de paràmetres a l'hora de fer les crides).
+@;-----------------------------------------------------------------------------------
 @; int div_mod(unsigned int num, unsigned int den,
 @;				unsigned int *quo, unsigned int *mod):
 @;				computes the natural division (num / den) and returns
@@ -26,7 +28,7 @@
 @;		R3 -> (* mod)	address of the variable that will hold the remainder
 @;	Results:
 @; 		R0 <- returns 0 if no problem, !=0 if there is a division error (den==0)
-
+@;-----------------------------------------------------------------------------------
 
 @;-----------------------------------------------------------------------------------
 @; 	avgmaxmin_city(): calcula la temperatura mitjana, màxima i mínima d'una
@@ -44,28 +46,13 @@
 @; 		Resultat: 
 @;			R0 <- temperatura mitjana, expressada en graus Celsius en format Q13.
 @;-----------------------------------------------------------------------------------
-
-@;		R0 = avg (la suma)/ dir mem taula temp / 12
-@;		R1 = nrows (possible push per optimitzar???) / dir mem cociente.
-@; 		R2 = id_city / índex de fila / índex de posició / dir mem residuo.
-@; 		R3 = *mmres
-@; 		R4 =  / *mmres
-@; 		R5 = idmin
-@; 		R6 = idmax
-@; 		R7 = max
-@; 		R8 = min
-@; 		R9 = i
-@; 		R10 = tvar
-@; 		R11 = *quo / index de posicio.
-@; 		R12 = *res / dir mem taula. (en R0 guardem avg per passar-ho directament com a numerador a div_mod.
-
-
 	.global avgmaxmin_city
 avgmaxmin_city:
 		push {r1 - r11, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests regitres per accedir a la fila id_city.
 		mov r11, r0 										@; R11 = R0 = dir mem taula.
 		mov r1, #12											@; Com a mul no es poden emprar valors immediats, cal fer un mov previ. Es posa aquí per reaprofitar la crida a div_mod. 
-															@; Es "perd" nrows (queda a la pila) però com no s'empra més es pot obviar aquesta pèrdua.
+															@; Es "perd" nrows (realment es perd la seva possibilitat d´accés ràpid, el valor queda a la pila) però com no s'empra 
+															@; més es pot obviar aquesta pèrdua.
 		mul r2, r1, r2										@; R2 = id_city * NC (12) -> es guarda en r2 el valor per accedir a aquella fila de la columna. Com al principi
 															@; es fa un push i al final un pop de r2, es pot deixar així aquest valor per evitar malgastar registres
 															@; i accedir de forma còmoda a la fila de la ciutat desitjada.
@@ -77,8 +64,8 @@ avgmaxmin_city:
 		mov r8, r0											@; R8 = min = avg;
 		mov r9, #1											@; R9 = i = 1;
 .Lfor:														@; Es pot dir .Lfor perquè en la següent subrutina s'empra .Lwhile.
-		add r4, r2, r9										@; R4 = id_city * NC (R2) + i (nº columna, nº mes).
-		ldr r10, [r11, r4, lsl #2]							@; R10 = tvar = ttemp[id_city][i], s'obté la temperatura del mes i + 1 de la ciutat. De nou s'ha d'emprar 
+		add r4, r2, r9										@; R4 = id_city * NC (R2) + i (nº columna/mes).
+		ldr r10, [r11, r4, lsl #2]							@; R10 = tvar = ttemp[id_city][i], s'obté la temperatura del mes (i + 1) de la ciutat. De nou s'ha d'emprar 
 															@; lsl #2 pel tema de la estructura de la memòria emprada (4 bytes per dada).
 		add r0, r10											@; avg += tvar;
 		@; Condicional màxim.
@@ -94,20 +81,20 @@ avgmaxmin_city:
 		blo .Lfor											@; i < 12 --> es continua el bucle.
 @;endfor
 		sub sp, #8											@; Es reserva espai a la pila per dos variables locals, pel quo i mod de la subrutina div_mod.
-		mov r2, sp											@; R2 = dir mem cociente. Per push anterior es pot fer aquesta operació. Es perd l'índex de posició, però
-															@; com no s'empra més no passa res.
-		mov r4, r3											@; R4 = R3 = *mmres
-		add r3, sp, #4										@; R3 = dir mem residuo. No s'empra després, però cal indicar-ho per la subrutina div_mod.
-		tst r0, #MASK_SIGN									@; Signe de R0, flag Z = 0, signe positiu, flag Z = 1, signe negatiu.
-		beq .Lnotminus										@; avg és positiu o negatiu ???
+		mov r2, sp											@; R2 = dir mem quocient. Per push anterior es pot fer aquesta operació. Es perd l'índex de posició, però
+															@; com no s'empra més no és una pèrdua significativa.
+		mov r4, r3											@; R4 = R3 = *mmres. Cal fer aquest moviment per poder emprar R3 com adreça de memòria per res.
+		add r3, sp, #4										@; R3 = dir mem res. No s'empra després, però cal indicar-ho per la subrutina div_mod.
+		tst r0, #MASK_SIGN									@; Signe de R0: flag Z = 0, signe positiu, flag Z = 1, signe negatiu.
+		beq .Lnotminus										@; Si avg és positiu, es salten les instruccions de canvi de signe i directament es crida a div_mod.
 		rsb r0, #0											@; avg = - avg en Ca2 (Q13)
 		bl div_mod											@; Llamada a rutina div_mod().
 		ldr r10, [r2]										@; Es carrega de R2 la mitjana ja calculada.
 		rsb r10, #0											@; avg = - avg en Ca2 (Q13)
 		b .Lyetdivided										@; Es salta a l'etiqueta de divisió completada.
 .Lnotminus:
-		bl div_mod
-		ldr r10, [r2]
+		bl div_mod											@; Llamada a rutina div_mod().
+		ldr r10, [r2]										@; Es carrega de R2 la mitjana ja calculada.
 .Lyetdivided:
 		str r8, [r4, #MM_TMINC]								@; mmres->tmin_C = min;
 		str r7, [r4, #MM_TMAXC]								@; mmres->tmax_C = max;
@@ -135,27 +122,11 @@ avgmaxmin_city:
 @;				  les temperatures màximes i mínimes en Celsius i Fahrenheit, així
 @;				  com la posició on estan en la taula.
 @;-----------------------------------------------------------------------------------
-
-@;		R0 = dir mem taula
-@;		R1 = nrows
-@; 		R2 = id_month / dir mem cociente
-@; 		R3 = *mmres
-@; 		R4 =  / *mmres
-@; 		R5 = idmin
-@; 		R6 = idmax
-@; 		R7 = max
-@; 		R8 = min
-@; 		R9 = i
-@; 		R10 = tvar
-@; 		R11 = NC (12, temp)
-@; 		R12 = dir mem taula (en R0 guardem avg per passar-ho directament com a numerador a div_mod.
-
 	.global avgmaxmin_month
 avgmaxmin_month:
-		push {r1 - r12, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests registres per accedir a la fila id_city.
-		mov r12, r0 										@; R12 = R0 = dir mem taula.
-		mov r11, #12										@; Temporalment, conté NC = 12 (mesos).
-		ldr r0, [r12, r2, lsl#2]							@; avg = ttemp[0][id_month]; Com fila = 0, es pot carregar la info directament amb la columna desitjada
+		push {r2 - r11, lr}									@; Es guarda r2 perquè es fa modificacions sobre aquest registre per poder cridar a div_mod.
+		mov r11, r0 										@; R11 = R0 = dir mem taula.
+		ldr r0, [r11, r2, lsl#2]							@; avg = ttemp[0][id_month]; Com fila = 0, es pot carregar la info directament amb la columna desitjada
 															@; amb un desplaçament a l'esquerra de dos bits aplicat (es multiplica per 4 el nombre ja que cada 
 															@; posició de la taula de Q13 ocupa 4 espais en memòria, 32 bits).
 		mov r5, #0											@; R5 = idmin = 0;
@@ -163,12 +134,11 @@ avgmaxmin_month:
 		mov r7, r0											@; R7 = max = avg;
 		mov r8, r0											@; R8 = min = avg;
 		mov r9, #1											@; R9 = i = 1;
-		mov r4, r2											@; R4 = índex d'avenç per la matriu. Comença en R4 = R2 = id_month.
 .Lwhile:
 		cmp r9, r1																						
 		bhs .Lendwhile										@; i >= nrows --> s'acaba el bucle.		
-		add r4, r11											@; S'avança per la matriu NC (una fila).
-		ldr r10, [r12, r4, lsl #2]							@; R10 = tvar = ttemp[i][id_month]; De nou cal fer lsl pels 4 bytes a memòria de cada posició de la 
+		add r2, #12											@; S'avança per la matriu NC (una fila). Queda modificat id_month, però no es necessita després.
+		ldr r10, [r11, r2, lsl #2]							@; R10 = tvar = ttemp[i][id_month]; De nou cal fer lsl pels 4 bytes a memòria de cada posició de la 
 															@; matriu de temperatures.
 		add r0, r10											@; avg += tvar;
 		@; Condicional màxim.
@@ -183,11 +153,11 @@ avgmaxmin_month:
 		b .Lwhile											@; Es salta al principi del bucle while per comprovar si cal iterar o no.
 .Lendwhile:		
 		sub sp, #8											@; Es reserva espai a la pila per dos variables locals, pel quo i mod de la subrutina div_mod.
-		mov r2, sp											@; R2 = dir mem cociente. Per push anterior es pot fer aquesta operació. Es perd l'índex de posició, però
-															@; com no s'empra més no passa res.
-		mov r4, r3											@; R4 = R3 = *mmres. Es perd l'índex de matriu però no s'emprarà més.
-		add r3, sp, #4										@; R3 = dir mem residuo. No s'empra després, però cal indicar-ho per la subrutina div_mod.
-		tst r0, #MASK_SIGN									@; R10 = SIGNE DE R0
+		mov r2, sp											@; R2 = dir mem quocient. Per push anterior es pot fer aquesta operació. Es perd l'índex de posició, però
+															@; com no s'empra més no és una pèrdua significativa.
+		mov r4, r3											@; R4 = R3 = *mmres. Cal fer aquest moviment per poder emprar R3 com adreça de memòria per res.
+		add r3, sp, #4										@; R3 = dir mem res. No s'empra després, però cal indicar-ho per la subrutina div_mod.
+		tst r0, #MASK_SIGN									@; Signe de R0: flag Z = 0, signe positiu, flag Z = 1, signe negatiu.
 		beq .Lnotminus1										@; avg és positiu o negatiu ???
 		rsb r0, #0											@; avg = - avg en Ca2 (Q13)
 		bl div_mod											@; Llamada a rutina div_mod().
@@ -210,5 +180,5 @@ avgmaxmin_month:
 		strh r6, [r4, #MM_IDMAX]							@; mmres->id_max = idmax;
 		mov r0, r10											@; Es recupera avg per fer el retorn a R0.		
 		add sp, #8											@; Es recupera l'espai a la pila per les variables locals emprades.
-		pop {r1 - r12, pc}
+		pop {r2 - r11, pc}
 .end
