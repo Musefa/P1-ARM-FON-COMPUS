@@ -37,6 +37,7 @@ build/CelsiusFahrenheit_lib.o : sources/CelsiusFahrenheit_lib.s includes/Q13.i
 build/test_CelsiusFahrenheit_lib.o : tests/test_CelsiusFahrenheit_lib.c includes/CelsiusFahrenheit.h includes/Q13.h
 	arm-none-eabi-gcc $(CCFLAGS) tests/test_CelsiusFahrenheit_lib.c -o build/test_CelsiusFahrenheit_lib.o
 
+
 #------------------------------------------------------------------------------
 #	avgmaxmintemp_lib make commands
 #------------------------------------------------------------------------------
