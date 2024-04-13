@@ -14,12 +14,11 @@ APUNTES:
     <p style="color:green">1.- OPTIMIZAR INCLUDES???????? - JA OPTIMITZAT, NO TOCAR RES.</p>
     <p style="color:yellow">2.- DEPENDENCIAS DEL build/geotemp.o CORRECTAS O HACER -I./include (avgmaxmintemp.i???).</p>
     <p style="color:yellow">3.- HAY QUE HACER UN .o DEL avgmaxmintemp.c O CON EL DEL avmaxmintemp.s BASTA???</p>
-    <p style="color:orange">4.- DOCUMENTAR 12 EN COMA FIJA Q13 !!!!!!!</p>
     <p style="color:orange">5.- EN FER START DE NOU, CANVIEN LES DADES DE LA TAULA?????????? - LOAD PREVI NECESSARI, DOCUMENTAR..</p>
     <p style="color:blue">6.- INCLUDE DEL Q13.i??? (mascara de signo necesaria)?????</p>
     <p style="color:blue">7.- ADJUNTAR CÁLCULO DIVISIÓN Q13/ENTERO.</p>
     <p style="color:yellow">8.- HACE FALTA DIVMOD.h en geotemp.c????</p>
-    <p style="color:blue">9.- REVISAR COMENTARIOS.</p>
+    <p style="color:green">9.- REVISAR COMENTARIOS.</p>
     <p style="color:orange">10.- Para documentación: Indicar el porqué del movimiento de la opción -c en el makefile a CCFLAGS.</p>
     <p style="color:blue">TO DO: Més proves.</p>
     <p style="color:green">EXTRA: AUNQUE SEA INUTIL PONER -Lp_lib</p>
@@ -44,6 +43,7 @@ APUNTES:
     <p style="color:purple">Acabar de revisar comentarios + hacer pruebas</p>
 <h3>ARCHIVOS TESTING</h3>
     <p style="color:purple">Ampliar pruebas fase 2 + incorporar en fase 3 + fase extra (copiar los archivos de testing + modificar nombres para que concuerden con el makefile)</p>
+    <p style="color:yellow">TESTING DE LA FASE 3 AMPLIADO O NO????</p>
 
 IMPORTANTISIMOOOOO:
         -   JUSTIFICAR smull r1, r2, r0, r3 frente a smull r0, r1, r3, r0  POR EFICIENCIA TEMPORAL/DE EJECUCIÓN PARA FASE 1 (EN FASE 3 PLANTEAR COMPARACIÓN).

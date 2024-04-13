@@ -36,7 +36,7 @@ Celsius2Fahrenheit:
 		push {r1 - r3, lr}												@; Es fa un push dels registres que no han de retornar cap valor i dels quals no es
 																		@; vol perdre informació. Com en r0 es retorna el resultat, no s'ha de fer push.
 		ldr r3, =Q13_9_5												@; Es carrega el nombre 9/5 en codificació en coma fixa al registre r3. S'ha de fer
-																		@; així ja que com la distància de separació del bit a 1 de major pes i el bit a 1
+																			@; així ja que com la distància de separació del bit a 1 de major pes i el bit a 1
 																		@; de menys pes és major a 8 bits no es pot emprar com a registre immediat.
 																		@; D'aquesta manera, es fa que la constant sigui accessible ràpidament amb un únic
 																		@; accés a memòria.
@@ -106,5 +106,4 @@ Fahrenheit2Celsius:
 		orr r0, r1, r2, lsl #(32-13)																								
 		pop {r1 - r3, pc}												@; Es fa un pop als registres emprats en la funció amb els valors previs a 
 																		@; l'execució d'aquesta i al pc per fer efectiu el retorn de la funció al main.
-
 .end
