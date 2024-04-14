@@ -141,15 +141,16 @@ mul_Q13:
 @;----------------------------------------------------------------
 	.global div_Q13
 div_Q13:
-		push {r1 - r6, lr}											@; Es fa push de r1 perquè pot patir modificacions (canvi de signe), i de r2 per 
-																	@; fer un pop final i recuperar l'adreçaabans de la càrrega a memòria.
+		push {r1, r3 - r6, lr}										@; Es fa push de r1 perquè pot patir modificacions (canvi de signe). S'exclou r2 perquè
+																	@; es modifica en el programa temporalment, però al final es recupera el seu valor.
 		cmp r1, #0														
-		moveq r4, #1												@; divisor == 0 -> no divisible, infinit, ov = 1; S'empra r4 per
-																	@; reaprofitar millor després r3 (per la funció div_mod).
+		moveq r4, #1												@; ov = 1;
+		streqb r4, [r2]												@; *overflow = ov = 1;
 		moveq r0, #0												@; Quocient igual a 0.
 		beq .LendDiv
 		@; Inversió de num2.
 		@; No s'inicialitza ov perquè quedarà ja inicialitzat a posteriori, amb el resultat de mul_Q13.
+		mov r4, r2													@; Es guarda l'adreça de l'overflow en r4 (per recuperació posterior).
 		sub sp, #8													@; Es reserva espai a la pila per dos variables locals, pel quo i mod de la subrutina div_mod.
 		mov r2, sp													@; R2 = dir mem quocient. Per push anterior es pot fer aquesta operació.
 		add r3, sp, #4												@; R3 = dir mem residu. No s'empra després, però cal indicar-ho per la subrutina div_mod.
@@ -163,18 +164,16 @@ div_Q13:
 		ldr r1, [r2]												@; Es carrega de R2 a R1 1/num2 (quocient divisió feta).
 		mov r0, r5													@; Es recupera num1 a r0. r1 ja té carregat 1/num2, i r2 té ja carregat
 																	@; una adreça de memòria (la del quocient). Com no es tornarà a consultar
-																	@; el cocient, es pot emprar aquesta mateixa direcció i sobreescriure-hi
+																	@; el quocient, es pot emprar aquesta mateixa direcció i sobreescriure-hi
 																	@; informació.
+		mov r2, r4													@; En r2 ja tenim una adreça de memòria que podria servir per cridar a mulQ13, però
+																	@; fent aquest canvi l'overflow ja queda emmagatzemat en l'adreça passada per parà-
+																	@; metre, evitant-nos fer un load de memòria i un store addicional.
 		bl mul_Q13
 		cmp r6, #0													@; Es torna a comprovar si el signe original de num2 era negatiu
 		rsbne r0, #0												@; i en cas que ho fos, es canvia de signe el resultat final.
-		ldrb r4, [r2]												@; Es carrega a r4 l'estat de l'overflow retornat de mul_Q13 
 		add sp, #8													@; Es restaura l'estat de l'stack pointer (sp). Variables de la pila ja
 																	@; emprades.
-
 .LendDiv:
-		pop {r1, r2}												@; Es recupera l'adreça de *overflow (i num2 original per tal de recuperar
-																	@; correctament els valors de la pila).
-		strb r4, [r2]												@; *overflow = ov;
-		pop {r3 - r6, pc}											@; Es fa el pop de la resta de valors de la pila i es retorna la funció.
+		pop {r1, r3 - r6, pc}										@; Es fa el pop de la resta de valors de la pila i es retorna la funció.
 .end
