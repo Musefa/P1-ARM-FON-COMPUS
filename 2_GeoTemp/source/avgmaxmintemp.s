@@ -72,14 +72,14 @@ avgmaxmin_city:
 		cmp r10, r7
 		movgt r7, r10										@; tvar > max --> max = tvar;
 		movgt r6, r9										@; idmax = i;
-		@;Condicional mínim
+		@; Condicional mínim
 		cmp r10, r8
 		movlt r8, r10										@; tvar < min --> min = tvar;
 		movlt r5, r9										@; idmin = i;
 		add r9, #1											@; i++;
 		cmp r9, r1											@; Es pot posar #12, però emprant R1 es manté una simetria amb la subrutina avgmaxmin_month.											
 		blo .Lfor											@; i < 12 --> es continua el bucle.
-@;endfor
+@; endfor
 		sub sp, #8											@; Es reserva espai a la pila per dos variables locals, pel quo i mod de la subrutina div_mod.
 		mov r2, sp											@; R2 = dir mem quocient. Per push anterior es pot fer aquesta operació. Es perd l'índex de posició, però
 															@; com no s'empra més no és una pèrdua significativa.
@@ -91,7 +91,7 @@ avgmaxmin_city:
 		bl div_mod											@; Llamada a rutina div_mod().
 		ldr r10, [r2]										@; Es carrega de R2 la mitjana ja calculada.
 		rsb r10, #0											@; avg = - avg en Ca2 (Q13)
-		b .Lyetdivided										@; Es salta a l'etiqueta de divisió completada.
+		b .Lyetdivided										@; Se salta a l'etiqueta de divisió completada.
 .Lnotminus:
 		bl div_mod											@; Llamada a rutina div_mod().
 		ldr r10, [r2]										@; Es carrega de R2 la mitjana ja calculada.
@@ -145,12 +145,12 @@ avgmaxmin_month:
 		cmp r10, r7
 		movgt r7, r10										@; tvar > max --> max = tvar;
 		movgt r6, r9										@; idmax = i;
-		@;Condicional mínim
+		@; Condicional mínim
 		cmp r10, r8
 		movlt r8, r10										@; tvar < min --> min = tvar;
 		movlt r5, r9										@; idmin = i;
 		add r9, #1											@; i++;
-		b .Lwhile											@; Es salta al principi del bucle while per comprovar si cal iterar o no.
+		b .Lwhile											@; Se salta al principi del bucle while per comprovar si cal iterar o no.
 .Lendwhile:		
 		sub sp, #8											@; Es reserva espai a la pila per dos variables locals, pel quo i mod de la subrutina div_mod.
 		mov r2, sp											@; R2 = dir mem quocient. Per push anterior es pot fer aquesta operació. Es perd l'índex de posició, però
@@ -163,7 +163,7 @@ avgmaxmin_month:
 		bl div_mod											@; Llamada a rutina div_mod().
 		ldr r10, [r2]										@; Es carrega de R2 la mitjana ja calculada.
 		rsb r10, #0											@; avg = - avg en Ca2 (Q13)
-		b .Lyetdivided1										@; Es salta a l'etiqueta de divisió completada.
+		b .Lyetdivided1										@; Se salta a l'etiqueta de divisió completada.
 .Lnotminus1:
 		bl div_mod
 		ldr r10, [r2]

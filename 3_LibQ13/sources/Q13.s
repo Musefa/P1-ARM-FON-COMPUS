@@ -27,7 +27,7 @@ add_Q13:
 		mov r3, #0													@; unsigned char ov = 0, inicialment s'assumeix que no hi ha overflow.
 		adds r0, r1													@; R0 += R1 --> suma = num1 + num2; S'actualitzen els flags per tal
 																	@; de saber si s'ha produït overflow.
-		movvs r3, #1												@; Si hi ha overflow (prediació vs, overflow set), es canvia l'estat de
+		movvs r3, #1												@; Si hi ha overflow (predicació vs, overflow set), es canvia l'estat de
 																	@; de ov = 1;
 		strb r3, [r2]												@; *overflow = ov;
 		pop {r3, pc}
@@ -52,7 +52,7 @@ sub_Q13:
 		mov r3, #0													@; unsigned char ov = 0, inicialment s'assumeix que no hi ha overflow.
 		subs r0, r1													@; R0 -= R1 --> resta = num1 - num2; S'actualitzen els flags per tal
 																	@; de saber si s'ha produït overflow.
-		movvs r3, #1												@; Si hi ha overflow (prediació vs, overflow set), es canvia l'estat de
+		movvs r3, #1												@; Si hi ha overflow (predicació vs, overflow set), es canvia l'estat de
 																	@; de ov = 1;
 		strb r3, [r2]												@; *overflow = ov;
 		pop {r3, pc}
@@ -100,25 +100,26 @@ mul_Q13:
 		@; 									simulant un lsr correcte sense pèrdues de bits. Com als 32 - d bits de menys pes restants de Rhi hi queden 0,
 		@;									els 32 - d bits de menys pes del Rlo no patiran modificacions.
 		@; 		mov Rhi, Rhi, lsr Rd --> Es desplacen els d bits a la dreta en el registre Rhi.
-		@; Ara bé, en aquesta pràctica es fan únicament les següents tres operacions:
+		@; Ara bé, en aquesta part de la pràctica es fan únicament les següents tres operacions:
 		
 		mov r0, r0, lsr #13
 		orr r0, r3, lsl #(32-13)									@; En r0 ja queda el resultat final.
 		mov r3, r3, asr #13											@; Cal fer el desplaçament per controlar l'overflow.
 		
-		@; ACABAR DE REVISAR COMENTARIS MULTIPLICACIÓ.
+		@; A diferència de la primera part de la pràctica, aquí cal fer un asr #13 per tal d'analitzar els bits alts de la multiplicació i comprovar si
+		@; s'ha produït (o no) overflow.
 		
 		
 		tst r0, #MASK_SIGN											@; S'analitza el signe del nombre resultat (primer signe del registre amb
 																	@; els 32 bits baixos.
 		mvnne r3, r3												@; S'inverteix r3 en cas que el nombre sigui negatiu. Si fos negatiu, tots
-																	@; els bits en r3 haurien d'estar a 1, per tant amb aquesta instrucció
-																	@; passaran a estar a 0.
+																	@; els bits en r3 haurien d'estar a 1 (si no s'ha produït overflow), per tant 
+																	@; amb aquesta instrucció passaran a estar a 0.
 		cmp r3, #0
 		movne r3, #1
 		moveq r3, #0												@; Si r3 == 0, independentment del signe (ja que s'ha realitzat un mvn 
 																	@; previ) no s'ha produït overflow (r3 = ov = 0). En cas que no sigui
-																	@; així, hi ha overflow (r3 = 0v = 1). S'empra r3 perquè no es retorna
+																	@; així, hi ha overflow (r3 = ov = 1). S'empra r3 perquè no es retorna
 																	@; la part alta, i ens queda informació inservible per la resta de la
 																	@; subrutina.
 		strb r3, [r2]												@; *overflow = ov;
@@ -140,19 +141,18 @@ mul_Q13:
 @;----------------------------------------------------------------
 	.global div_Q13
 div_Q13:
-		push {r1 - r6, lr}											@; Es fa push de r1 perquè pot patir modificacions, i de r2 per fer un pop final i recuperar l'adreça
-																	@; abans de la càrrega a memòria.
+		push {r1 - r6, lr}											@; Es fa push de r1 perquè pot patir modificacions (canvi de signe), i de r2 per 
+																	@; fer un pop final i recuperar l'adreçaabans de la càrrega a memòria.
 		cmp r1, #0														
-		moveq r4, #1												@; divisor == 0 -> no divisible, infinito, ov = 1; S'empra r4 per
+		moveq r4, #1												@; divisor == 0 -> no divisible, infinit, ov = 1; S'empra r4 per
 																	@; reaprofitar millor després r3 (per la funció div_mod).
-		moveq r0, #0												@; Cocient igual a 0.
+		moveq r0, #0												@; Quocient igual a 0.
 		beq .LendDiv
 		@; Inversió de num2.
 		@; No s'inicialitza ov perquè quedarà ja inicialitzat a posteriori, amb el resultat de mul_Q13.
 		sub sp, #8													@; Es reserva espai a la pila per dos variables locals, pel quo i mod de la subrutina div_mod.
-		mov r2, sp													@; R2 = dir mem cociente. Per push anterior es pot fer aquesta operació. Es perd l'índex de posició, però
-																	@; com no s'empra més no passa res.
-		add r3, sp, #4												@; R3 = dir mem residuo. No s'empra després, però cal indicar-ho per la subrutina div_mod.
+		mov r2, sp													@; R2 = dir mem quocient. Per push anterior es pot fer aquesta operació.
+		add r3, sp, #4												@; R3 = dir mem residu. No s'empra després, però cal indicar-ho per la subrutina div_mod.
 		mov r5, r0													@; Es salva el contingut de r0 (num1).
 		mov r0, #Q13_1_LSL_13										@; r0 = MAKE_Q13(1) << 13 per la crida de div mod.
 		
