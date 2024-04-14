@@ -28,7 +28,7 @@ add_Q13:
 		mov r3, #0													@; unsigned char ov = 0, inicialment s'assumeix que no hi ha overflow.
 		adds r0, r1													@; R0 += R1 --> suma = num1 + num2; S'actualitzen els flags per tal
 																	@; de saber si s'ha produït overflow.
-		movvs r3, #1												@; Si hi ha overflow (prediació vs, overflow set), es canvia l'estat de
+		movvs r3, #1												@; Si hi ha overflow (predicació vs, overflow set), es canvia l'estat de
 																	@; de ov = 1;
 		strb r3, [r2]												@; *overflow = ov;
 		pop {r3, pc}
@@ -46,13 +46,14 @@ add_Q13:
 @;				   retorna són els bits baixos del resultat.
 @;		RESULTAT -> R0 = resta dels dos nombres.
 @;----------------------------------------------------------------	
+
 	.global sub_Q13
 sub_Q13:
 		push {r3, lr}
 		mov r3, #0													@; unsigned char ov = 0, inicialment s'assumeix que no hi ha overflow.
 		subs r0, r1													@; R0 -= R1 --> resta = num1 - num2; S'actualitzen els flags per tal
 																	@; de saber si s'ha produït overflow.
-		movvs r3, #1												@; Si hi ha overflow (prediació vs, overflow set), es canvia l'estat de
+		movvs r3, #1												@; Si hi ha overflow (predicació vs, overflow set), es canvia l'estat de
 																	@; de ov = 1;
 		strb r3, [r2]												@; *overflow = ov;
 		pop {r3, pc}
@@ -100,25 +101,26 @@ mul_Q13:
 		@; 									simulant un lsr correcte sense pèrdues de bits. Com als 32 - d bits de menys pes restants de Rhi hi queden 0,
 		@;									els 32 - d bits de menys pes del Rlo no patiran modificacions.
 		@; 		mov Rhi, Rhi, lsr Rd --> Es desplacen els d bits a la dreta en el registre Rhi.
-		@; Ara bé, en aquesta pràctica es fan únicament les següents tres operacions:
+		@; Ara bé, en aquesta part de la pràctica es fan únicament les següents tres operacions:
 		
 		mov r0, r0, lsr #13
 		orr r0, r3, lsl #(32-13)									@; En r0 ja queda el resultat final.
 		mov r3, r3, asr #13											@; Cal fer el desplaçament per controlar l'overflow.
 		
-		@; ACABAR DE REVISAR COMENTARIS MULTIPLICACIÓ.
+		@; A diferència de la primera part de la pràctica, aquí cal fer un asr #13 per tal d'analitzar els bits alts de la multiplicació i comprovar si
+		@; s'ha produït (o no) overflow.
 		
 		
 		tst r0, #MASK_SIGN											@; S'analitza el signe del nombre resultat (primer signe del registre amb
 																	@; els 32 bits baixos.
 		mvnne r3, r3												@; S'inverteix r3 en cas que el nombre sigui negatiu. Si fos negatiu, tots
-																	@; els bits en r3 haurien d'estar a 1, per tant amb aquesta instrucció
-																	@; passaran a estar a 0.
+																	@; els bits en r3 haurien d'estar a 1 (si no s'ha produït overflow), per tant 
+																	@; amb aquesta instrucció passaran a estar a 0.
 		cmp r3, #0
 		movne r3, #1
 		moveq r3, #0												@; Si r3 == 0, independentment del signe (ja que s'ha realitzat un mvn 
 																	@; previ) no s'ha produït overflow (r3 = ov = 0). En cas que no sigui
-																	@; així, hi ha overflow (r3 = 0v = 1). S'empra r3 perquè no es retorna
+																	@; així, hi ha overflow (r3 = ov = 1). S'empra r3 perquè no es retorna
 																	@; la part alta, i ens queda informació inservible per la resta de la
 																	@; subrutina.
 		strb r3, [r2]												@; *overflow = ov;
