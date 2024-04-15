@@ -10,7 +10,7 @@
 								   macro for dealing with Q13 numbers */
 #include "avgmaxmintemp.h"		/* mmres: return type from avgmaxmin routines */
 
-#define NUM_TEST_ROWS	12
+#define NUM_TEST_ROWS	13
 	/**
 	 * NOTES:
 	 * 1.- Max values could be tested, but it's something impossible (because of the natural range of 
@@ -55,7 +55,10 @@ Q13 test_data[NUM_TEST_ROWS][12] = {
 	 MAKE_Q13(1), MAKE_Q13(0), MAKE_Q13(0), MAKE_Q13(-1)},
 	{MAKE_Q13(-1), MAKE_Q13(-2), MAKE_Q13(-3), MAKE_Q13(-4),							// all negative integers
 	 MAKE_Q13(-5), MAKE_Q13(-6), MAKE_Q13(-7), MAKE_Q13(-8),
-	 MAKE_Q13(-9), MAKE_Q13(-10), MAKE_Q13(-11), MAKE_Q13(-12)}
+	 MAKE_Q13(-9), MAKE_Q13(-10), MAKE_Q13(-11), MAKE_Q13(-12)},
+	{MAKE_Q13(12), MAKE_Q13(12), MAKE_Q13(12), MAKE_Q13(12),							// max and min in the same position, replicated values.
+	 MAKE_Q13(12), MAKE_Q13(12), MAKE_Q13(12), MAKE_Q13(12),
+	 MAKE_Q13(12), MAKE_Q13(12), MAKE_Q13(12), MAKE_Q13(12)}
 };
 
 /* type definition of the structured record that holds the test case values */
@@ -117,6 +120,10 @@ test_struct test_case[] =
 	{MAKE_Q13(-12), MAKE_Q13(-1),
 	 MAKE_Q13(10.4), MAKE_Q13(30.2),
 	 11, 0}},
+ {'C', 12, MAKE_Q13(12),							/*	12: max and min in the same position, replicated values. */
+	{MAKE_Q13(12), MAKE_Q13(12),
+	 MAKE_Q13(53.6), MAKE_Q13(53.6),
+	 0, 0}},
 	 
 	/* Tests  for months */
  {'M', 0, MAKE_Q13(8.664),						/*  12: first column (January) */
