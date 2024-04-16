@@ -173,7 +173,7 @@ exact_div_Q13:
 .Lforbig:
 		cmp r1, r0
 		bls .Lfinforbig
-		@;Desplaçament lògic de bits a l'esquerra del nombre de 64 bits. S'avança de bit en bit per controlar el fi del bucle.
+		@; Desplaçament lògic de bits a l'esquerra del nombre de 64 bits. S'avança de bit en bit per controlar el fi del bucle.
 		mov r0, r0, lsl #1											@; Es desplacen tots els bits amb valor de r0 a l'esquerra de tot el nombre.
 		orr r0, r7, lsr #(32-1)										@; Inserció dels bits de RLo a RHi.
 		mov r7, r7, lsl #1
@@ -187,7 +187,7 @@ exact_div_Q13:
 		@; Preparació del dividend.
 		ldr r0, [r3]												@; Es guarda el residu en r0.
 		ldr r8, [r2]												@; Es guarda en r8 el residu.		
-		@;Desplaçament lògic de bits a l'esquerra del nombre de 64 bits. S'avança de bit en bit per controlar el fi del bucle.
+		@; Desplaçament lògic de bits a l'esquerra del nombre de 64 bits. S'avança de bit en bit per controlar el fi del bucle.
 		mov r0, r0, lsl #1											@; Es desplacen tots els bits amb valor de r0 a l'esquerra de tot el nombre.
 		orr r0, r7, lsr #(32-1)										@; Inserció dels bits de RLo a RHi.
 		mov r7, r7, lsl #1											@; Es desplacen r5 bits a per tal de continuar amb la divisió.
