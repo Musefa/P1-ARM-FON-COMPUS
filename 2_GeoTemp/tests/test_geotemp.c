@@ -120,24 +120,24 @@ test_struct test_case[] =
 	{MAKE_Q13(-12), MAKE_Q13(-1),
 	 MAKE_Q13(10.4), MAKE_Q13(30.2),
 	 11, 0}},
- {'C', 12, MAKE_Q13(12),							/*	12: max and min in the same position, replicated values. */
+ {'C', 12, MAKE_Q13(12),						/*	12: max and min in the same position, replicated values. */
 	{MAKE_Q13(12), MAKE_Q13(12),
 	 MAKE_Q13(53.6), MAKE_Q13(53.6),
 	 0, 0}},
 	 
 	/* Tests  for months */
- {'M', 0, MAKE_Q13(8.664),						/*  12: first column (January) */
-	{MAKE_Q13(-17.78), MAKE_Q13(50.0),
-	 MAKE_Q13(-0.004), MAKE_Q13(122),
-	 4, 3}},
- {'M', 6, MAKE_Q13(7.664),						/*  13: middle column (July) */
-	{MAKE_Q13(-18.8), MAKE_Q13(50.0),
-	 MAKE_Q13(-1.84), MAKE_Q13(122),
-	 1, 3}},
- {'M', 11, MAKE_Q13(10.844),					/*  14: last column (December) */
-	{MAKE_Q13(-17.78), MAKE_Q13(50.0),
-	 MAKE_Q13(-0.004), MAKE_Q13(122),
-	 4, 3}}
+ {'M', 0, MAKE_Q13(-19.919),					/*  13: first column (January) */
+	{MAKE_Q13(-273.15), MAKE_Q13(50.0),
+	 MAKE_Q13(-459.67), MAKE_Q13(122),
+	 6, 3}},
+ {'M', 6, MAKE_Q13(-23.527),					/*  14: middle column (July) */
+	{MAKE_Q13(-270.09), MAKE_Q13(50.0),
+	 MAKE_Q13(-454.162), MAKE_Q13(122),
+	 6, 3}},
+ {'M', 11, MAKE_Q13(-20.436),					/*  15: last column (December) */
+	{MAKE_Q13(-276.93), MAKE_Q13(50.0),
+	 MAKE_Q13(-466.474), MAKE_Q13(122),
+	 6, 3}}
 };
 
 

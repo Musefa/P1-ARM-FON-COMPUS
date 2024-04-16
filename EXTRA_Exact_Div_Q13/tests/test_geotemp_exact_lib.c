@@ -10,30 +10,55 @@
 								   macro for dealing with Q13 numbers */
 #include "avgmaxmintemp.h"		/* mmres: return type from avgmaxmin routines */
 
-#define NUM_TEST_ROWS	5
+#define NUM_TEST_ROWS	13
 	/**
 	 * NOTES:
-	 * 1.- Max values could be tested, but it's something impossible (because of teh natural range of 
-	 *	temperatures.
+	 * 1.- Max values could be tested, but it's something impossible (because of the natural range of 
+	 *	temperatures).
 	 * 2.- All positive could be tested, but already done with test 0.
+	 * 3.- All positive integers tested already in extremely high temperatures.
 	*/
 	
 Q13 test_data[NUM_TEST_ROWS][12] = {
-	{MAKE_Q13(13.4), MAKE_Q13(13.4), MAKE_Q13(20.0), MAKE_Q13(13.4),			// several replicated min and max
+	{MAKE_Q13(13.4), MAKE_Q13(13.4), MAKE_Q13(20.0), MAKE_Q13(13.4),					// several replicated min and max
 	 MAKE_Q13(20.0), MAKE_Q13(20.0), MAKE_Q13(25.9), MAKE_Q13(25.9),
 	 MAKE_Q13(20.0), MAKE_Q13(20.0), MAKE_Q13(20.0), MAKE_Q13(25.9)},
-	{MAKE_Q13(-2.2), MAKE_Q13(-3.5), MAKE_Q13(-5.8), MAKE_Q13(-7.5),			// all negatives
+	{MAKE_Q13(-2.2), MAKE_Q13(-3.5), MAKE_Q13(-5.8), MAKE_Q13(-7.5),					// all negatives
 	 MAKE_Q13(-11.5), MAKE_Q13(-15.4), MAKE_Q13(-18.8), MAKE_Q13(-18.5),
 	 MAKE_Q13(-14.9), MAKE_Q13(-10.3), MAKE_Q13(-5.7), MAKE_Q13(-3.0)},
-	{MAKE_Q13(0.1), MAKE_Q13(0.3), MAKE_Q13(0.7), MAKE_Q13(0.8),				// all values around 0º Celsius
+	{MAKE_Q13(0.1), MAKE_Q13(0.3), MAKE_Q13(0.7), MAKE_Q13(0.8),						// all values around 0º Celsius
 	 MAKE_Q13(0.8), MAKE_Q13(-0.9), MAKE_Q13(-0.7), MAKE_Q13(0.5),
 	 MAKE_Q13(0.0), MAKE_Q13(0.7), MAKE_Q13(0.5), MAKE_Q13(-0.9)},
-	{MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0),   		 	// all same and extremely high temperatures.
-	  MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0),
-	  MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0)},
-	{MAKE_Q13(-17.78), MAKE_Q13(-17.58), MAKE_Q13(-17.38), MAKE_Q13(-17.88),	// all values around 0º Fahrenheit
-	  MAKE_Q13(-17.98), MAKE_Q13(-17.78), MAKE_Q13(-18.08), MAKE_Q13(-17.28),
-	  MAKE_Q13(-18.68), MAKE_Q13(-16.88), MAKE_Q13(-17.68), MAKE_Q13(-17.78)} 	
+	{MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0),   		 			// all same and extremely high temperatures
+	 MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0),
+	 MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0), MAKE_Q13(50.0)},
+	{MAKE_Q13(-17.78), MAKE_Q13(-17.58), MAKE_Q13(-17.38), MAKE_Q13(-17.88),			// all values around 0º Fahrenheit
+	 MAKE_Q13(-17.98), MAKE_Q13(-17.78), MAKE_Q13(-18.08), MAKE_Q13(-17.28),
+	 MAKE_Q13(-18.68), MAKE_Q13(-16.88), MAKE_Q13(-17.68), MAKE_Q13(-17.78)},	
+	{MAKE_Q13(-90.05), MAKE_Q13(-88.3), MAKE_Q13(-87.01), MAKE_Q13(-91.3),				// all values around minimum temperature in Earth (-89.2 ºC)
+	 MAKE_Q13(-92), MAKE_Q13(-89.03), MAKE_Q13(-89.7), MAKE_Q13(-88),
+	 MAKE_Q13(-89.2), MAKE_Q13(-87.09), MAKE_Q13(-90), MAKE_Q13(-84.3)},
+	{MAKE_Q13(-273.15), MAKE_Q13(-274.03), MAKE_Q13(-272.5), MAKE_Q13(-273.3),  		// all values around 0 ºK
+	 MAKE_Q13(-273), MAKE_Q13(-274.4), MAKE_Q13(-270.09), MAKE_Q13(-275.66),
+	 MAKE_Q13(-274), MAKE_Q13(-271.099), MAKE_Q13(-273.4), MAKE_Q13(-276.93)},
+	{MAKE_Q13(10.13442), MAKE_Q13(20.32312), MAKE_Q13(30.39902), MAKE_Q13(-10.23876),	// all values with 5 decimal digits
+	 MAKE_Q13(40.56478), MAKE_Q13(35.67584), MAKE_Q13(15.24527), MAKE_Q13(-32.90966),
+	 MAKE_Q13(32.44232), MAKE_Q13(43.23255), MAKE_Q13(32.46578), MAKE_Q13(23.94758)},
+	{MAKE_Q13(2.2), MAKE_Q13(3.5), MAKE_Q13(5.8), MAKE_Q13(7.5),						// values of Andorra la Vella (HNORD city)
+	 MAKE_Q13(11.5), MAKE_Q13(15.4), MAKE_Q13(18.8), MAKE_Q13(18.5),
+	 MAKE_Q13(14.9), MAKE_Q13(10.3), MAKE_Q13(5.7), MAKE_Q13(3.0)},
+	{MAKE_Q13(16.9), MAKE_Q13(17.2), MAKE_Q13(15.8), MAKE_Q13(13.7),					// values of Wellington (HSUD city)
+	 MAKE_Q13(11.7), MAKE_Q13(9.7), MAKE_Q13(8.9), MAKE_Q13(9.4),
+	 MAKE_Q13(10.8), MAKE_Q13(12.0), MAKE_Q13(13.5), MAKE_Q13(15.4)},
+	{MAKE_Q13(20.5), MAKE_Q13(17.44), MAKE_Q13(-20.5), MAKE_Q13(-17.44),				// average = 0
+	 MAKE_Q13(32.33), MAKE_Q13(-43.2), MAKE_Q13(-32.33), MAKE_Q13(43.2),
+	 MAKE_Q13(1), MAKE_Q13(0), MAKE_Q13(0), MAKE_Q13(-1)},
+	{MAKE_Q13(-1), MAKE_Q13(-2), MAKE_Q13(-3), MAKE_Q13(-4),							// all negative integers
+	 MAKE_Q13(-5), MAKE_Q13(-6), MAKE_Q13(-7), MAKE_Q13(-8),
+	 MAKE_Q13(-9), MAKE_Q13(-10), MAKE_Q13(-11), MAKE_Q13(-12)},
+	{MAKE_Q13(12), MAKE_Q13(12), MAKE_Q13(12), MAKE_Q13(12),							// max and min in the same position, replicated values.
+	 MAKE_Q13(12), MAKE_Q13(12), MAKE_Q13(12), MAKE_Q13(12),
+	 MAKE_Q13(12), MAKE_Q13(12), MAKE_Q13(12), MAKE_Q13(12)}
 };
 
 /* type definition of the structured record that holds the test case values */
@@ -47,40 +72,72 @@ typedef struct {
 /* the list of test case values */
 test_struct test_case[] =
 	/* Tests for cities */
-{{'C', 0, MAKE_Q13(19.8),					/*  0: several replicated min and max */
+{{'C', 0, MAKE_Q13(19.8),						/*  0: several replicated min and max */
 	{MAKE_Q13(13.4), MAKE_Q13(25.9),
 	 MAKE_Q13(56.12), MAKE_Q13(78.62),
 	 0, 6}},
- {'C', 1, MAKE_Q13(-9.8),					/*  1: all negatives */
+ {'C', 1, MAKE_Q13(-9.8),						/*  1: all negatives */
 	{MAKE_Q13(-18.8), MAKE_Q13(-2.2),
 	 MAKE_Q13(-1.84), MAKE_Q13(28.04),
 	 6, 0}},
- {'C', 2, MAKE_Q13(0.2),					/*  2: all values around 0º Celsius */
+ {'C', 2, MAKE_Q13(0.2),						/*  2: all values around 0º Celsius */
 	{MAKE_Q13(-0.9), MAKE_Q13(0.8),
 	 MAKE_Q13(30.38), MAKE_Q13(33.44),
 	 5, 3}},
- { 'C', 3, MAKE_Q13(50.0),					/* 	3: all same and extremely high temperatures */
+ {'C', 3, MAKE_Q13(50.0),						/* 	3: all same and extremely high temperatures */
 	{MAKE_Q13(50.0), MAKE_Q13(50.0),
 	 MAKE_Q13(122), MAKE_Q13(122),
 	 0, 0}},
- { 'C', 4, MAKE_Q13(-17.7),
-	{MAKE_Q13(-18.68), MAKE_Q13(-16.88), 	/*	4: all values around 0º Fahrenheit */
+ {'C', 4, MAKE_Q13(-17.7),						/*	4: all values around 0º Fahrenheit */
+	{MAKE_Q13(-18.68), MAKE_Q13(-16.88), 	
 	 MAKE_Q13(-1.624), MAKE_Q13(1.616),
 	 8, 9}},
+ {'C', 5, MAKE_Q13(-88.83),						/*	5: all values around minimum temperature in Earth (-89.2 ºC) */
+	{MAKE_Q13(-92), MAKE_Q13(-84.3),
+	 MAKE_Q13(-133.6), MAKE_Q13(-119.74),
+	 4, 11}},
+ {'C', 6, MAKE_Q13(-273.46),					/*	6: all values around 0 ºK */
+	{MAKE_Q13(-276.93), MAKE_Q13(-270.09),
+	 MAKE_Q13(-466.474), MAKE_Q13(-454.162),
+	 11, 6}},
+ {'C', 7, MAKE_Q13(20.10686),
+	{MAKE_Q13(-32.90966), MAKE_Q13(43.23255),	/* 	7: all values with 5 decimal digits */
+	 MAKE_Q13(-27.23739), MAKE_Q13(109.81859),
+	 7, 9}},
+ {'C', 8, MAKE_Q13(9.758),						/*	8: values of Andorra la Vella (HNORD city) */
+	{MAKE_Q13(2.2), MAKE_Q13(18.8),
+	 MAKE_Q13(35.96), MAKE_Q13(65.84),
+	 0, 6}},
+ {'C', 9, MAKE_Q13(12.917),						/*	9: values of Wellington (HSUD city) */
+	{MAKE_Q13(8.9), MAKE_Q13(17.2),
+	 MAKE_Q13(48.02), MAKE_Q13(62.96),
+	 6, 1}},
+ {'C', 10, MAKE_Q13(0),							/*	10: average = 0 */
+	{MAKE_Q13(-43.2), MAKE_Q13(43.2),
+	 MAKE_Q13(-45.76), MAKE_Q13(109.76),
+	 5, 7}},
+ {'C', 11, MAKE_Q13(-6.5),						/*	11: all negative integers */
+	{MAKE_Q13(-12), MAKE_Q13(-1),
+	 MAKE_Q13(10.4), MAKE_Q13(30.2),
+	 11, 0}},
+ {'C', 12, MAKE_Q13(12),						/*	12: max and min in the same position, replicated values. */
+	{MAKE_Q13(12), MAKE_Q13(12),
+	 MAKE_Q13(53.6), MAKE_Q13(53.6),
+	 0, 0}},
 	 
 	/* Tests  for months */
- {'M', 0, MAKE_Q13(8.664),					/*  5: first column (January) */
-	{MAKE_Q13(-17.78), MAKE_Q13(50.0),
-	 MAKE_Q13(-0.004), MAKE_Q13(122),
-	 4, 3}},
- {'M', 6, MAKE_Q13(7.664),					/*  6: middle column (July) */
-	{MAKE_Q13(-18.8), MAKE_Q13(50.0),
-	 MAKE_Q13(-1.84), MAKE_Q13(122),
-	 1, 3}},
- {'M', 11, MAKE_Q13(10.844),				/*  7: last column (December) */
-	{MAKE_Q13(-17.78), MAKE_Q13(50.0),
-	 MAKE_Q13(-0.004), MAKE_Q13(122),
-	 4, 3}}
+ {'M', 0, MAKE_Q13(-19.919),					/*  13: first column (January) */
+	{MAKE_Q13(-273.15), MAKE_Q13(50.0),
+	 MAKE_Q13(-459.67), MAKE_Q13(122),
+	 6, 3}},
+ {'M', 6, MAKE_Q13(-23.527),					/*  14: middle column (July) */
+	{MAKE_Q13(-270.09), MAKE_Q13(50.0),
+	 MAKE_Q13(-454.162), MAKE_Q13(122),
+	 6, 3}},
+ {'M', 11, MAKE_Q13(-20.436),					/*  15: last column (December) */
+	{MAKE_Q13(-276.93), MAKE_Q13(50.0),
+	 MAKE_Q13(-466.474), MAKE_Q13(122),
+	 6, 3}}
 };
 
 
