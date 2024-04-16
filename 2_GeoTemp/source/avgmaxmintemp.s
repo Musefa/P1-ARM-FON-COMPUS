@@ -46,6 +46,22 @@
 @; 		Resultat: 
 @;			R0 <- temperatura mitjana, expressada en graus Celsius en format Q13.
 @;-----------------------------------------------------------------------------------
+@;-----------------------------------------------------------------------------------
+@;	LLISTA DE VALORS DELS REGISTRES EN AQUESTA RUTINA
+@;	R0 -> dir memòria taula de temp; avg; min i max en C i F (per fer crida a 
+@;		  Celsius2Fahrenheit; return d'avg final (ja calculada).
+@;	R1 -> nrows (no emprat en aquesta rutina); #12 (valor immediat).
+@;	R2 -> id_city; id_city * NC(12); sp (dir mem quocient per div_mod).
+@;	R3 -> t_maxmin *mmres; sp + 4 (dir mem residu per div_mod).
+@; 	R4 -> id_citu * NC(12) + i (índex d'avenç de la matriu), tmaxmin *mmres
+@;	R5 -> idmin
+@; 	R6 -> idmax
+@; 	R7 -> max
+@;	R8 -> min
+@; 	R9 -> i (índex per bucle for)
+@; 	R10 -> tvar; avg calculat (després de div_mod).
+@;	R11 -> dir memòria taula de temp
+@;-----------------------------------------------------------------------------------
 	.global avgmaxmin_city
 avgmaxmin_city:
 		push {r1 - r11, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests regitres per accedir a la fila id_city.
@@ -121,6 +137,22 @@ avgmaxmin_city:
 @;			R3 -> t_maxmin *mmres, adreça de l'estructura multicamp on es guarden
 @;				  les temperatures màximes i mínimes en Celsius i Fahrenheit, així
 @;				  com la posició on estan en la taula.
+@;-----------------------------------------------------------------------------------
+@;-----------------------------------------------------------------------------------
+@;	LLISTA DE VALORS DELS REGISTRES EN AQUESTA RUTINA
+@;	R0 -> dir memòria taula de temp; avg; min i max en C i F (per fer crida a 
+@;		  Celsius2Fahrenheit; return d'avg final (ja calculada).
+@;	R1 -> nrows
+@;	R2 -> id_month; índex d'avenç per la matriu; sp (dir mem quocient per div_mod).
+@;	R3 -> t_maxmin *mmres; sp + 4 (dir mem residu per div_mod).
+@; 	R4 -> tmaxmin *mmres
+@;	R5 -> idmin
+@; 	R6 -> idmax
+@; 	R7 -> max
+@;	R8 -> min
+@; 	R9 -> i (índex per bucle for)
+@; 	R10 -> tvar; avg calculat (després de div_mod).
+@;	R11 -> dir memòria taula de temp
 @;-----------------------------------------------------------------------------------
 	.global avgmaxmin_month
 avgmaxmin_month:
