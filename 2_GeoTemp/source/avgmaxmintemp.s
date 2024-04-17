@@ -51,9 +51,9 @@
 @;	R0 -> dir memòria taula de temp; avg; min i max en C i F (per fer crida a 
 @;		  Celsius2Fahrenheit; return d'avg final (ja calculada).
 @;	R1 -> nrows (no emprat en aquesta rutina); #12 (valor immediat).
-@;	R2 -> id_city; id_city * NC(12); sp (dir mem quocient per div_mod).
+@;	R2 -> id_city; id_city * NC(12) + i; sp (dir mem quocient per div_mod).
 @;	R3 -> t_maxmin *mmres; sp + 4 (dir mem residu per div_mod).
-@; 	R4 -> id_citu * NC(12) + i (índex d'avenç de la matriu), tmaxmin *mmres
+@; 	R4 -> tmaxmin *mmres
 @;	R5 -> idmin
 @; 	R6 -> idmax
 @; 	R7 -> max
@@ -80,8 +80,8 @@ avgmaxmin_city:
 		mov r8, r0											@; R8 = min = avg;
 		mov r9, #1											@; R9 = i = 1;
 .Lfor:														@; Es pot dir .Lfor perquè en la següent subrutina s'empra .Lwhile.
-		add r4, r2, r9										@; R4 = id_city * NC (R2) + i (nº columna/mes).
-		ldr r10, [r11, r4, lsl #2]							@; R10 = tvar = ttemp[id_city][i], s'obté la temperatura del mes (i + 1) de la ciutat. De nou s'ha d'emprar 
+		add r2, #1											@; R2 = índex d'accés a la matriu.
+		ldr r10, [r11, r2, lsl #2]							@; R10 = tvar = ttemp[id_city][i], s'obté la temperatura del mes (i + 1) de la ciutat. De nou s'ha d'emprar 
 															@; lsl #2 pel tema de la estructura de la memòria emprada (4 bytes per dada).
 		add r0, r10											@; avg += tvar;
 		@; Condicional màxim.

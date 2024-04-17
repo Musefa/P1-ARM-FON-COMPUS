@@ -32,19 +32,35 @@ Q13_12 = 0x18000											@; Nombre 12 en Q13, necessari per avgmaxmintemp_city
 @; 		Resultat: 
 @;			R0 <- temperatura mitjana, expressada en graus Celsius en format Q13.
 @;-----------------------------------------------------------------------------------
+@;-----------------------------------------------------------------------------------
+@;	LLISTA DE VALORS DELS REGISTRES EN AQUESTA RUTINA
+@;	R0 -> dir memòria taula de temp; avg; min i max en C i F (per fer crida a 
+@;		  Celsius2Fahrenheit; return d'avg final (ja calculada).
+@;	R1 -> nrows (no emprat en aquesta rutina); #12 (valor immediat), tvar
+@;	R2 -> id_city; sp
+@;	R3 -> t_maxmin *mmres
+@; 	R4 -> índex adreçament matriu
+@;	R5 -> idmin
+@; 	R6 -> idmax
+@; 	R7 -> max
+@;	R8 -> min
+@; 	R9 -> i (índex per bucle for)
+@; 	R10 -> avg calculat (després de div_mod).
+@;	R11 -> dir memòria taula de temp
+@;-----------------------------------------------------------------------------------
 	.global avgmaxmin_city									@; Es podria canviar el nom de la rutina per tal de diferenciar-la
 															@; de la de la fase 2, però com aquests arxius es cridaran per 
 															@; l'assemblador juntament amb els de test, no cal fer la 
 															@; diferenciació. A més, caldria modificar tots els noms de les 
 															@; funcions en aquests arxius de test.
 avgmaxmin_city:
-		push {r1 - r12, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests registres per accedir a la fila id_city i guardar
+		push {r1, r2, r4 - r11, lr}						@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests registres per accedir a la fila id_city i guardar
 															@; la direcció de memòria necessària per poder cridar rutines de libQ13.a i emmagatzemar l'estat de l'overflow.
 		mov r11, r0 										@; R11 = R0 = dir mem taula.
 		mov r1, #12											@; Com a mul no es poden emprar valors immediats, cal fer un mov previ. Es "perd" nrows (queda a la pila) 
 															@; però com no s'empra més es pot obviar aquesta pèrdua.
-		mul r12, r1, r2										@; R12 = id_city * NC (12) -> es guarda en r12 el valor per accedir a aquella fila de la columna.
-		ldr r0, [r11, r12, lsl #2]							@; R0 = avg = ttemp[id_city][0]. lsl #2 perquè la taula és de Q13, on cada nombre ocupa 4 bytes a memòria,
+		mul r4, r1, r2										@; R4 = id_city * NC (12) -> es guarda en r4 el valor per accedir a aquella fila de la columna.
+		ldr r0, [r11, r4, lsl #2]							@; R0 = avg = ttemp[id_city][0]. lsl #2 perquè la taula és de Q13, on cada nombre ocupa 4 bytes a memòria,
 															@; per tant lsl #2 multiplica l'índex per 4 per ajustar el valor desitjat correctament.
 		mov r5, #0											@; R5 = idmin = 0;
 		mov r6, #0											@; R6 = idmax = 0;
@@ -55,7 +71,7 @@ avgmaxmin_city:
 															@; de l'overflow en alguna posició de memòria, i també per la posterior crida a div_Q13.
 		mov r2, sp											@; Es guarda en r2 la dir de mem per guardar l'overflow de les diferents rutines cridades de libQ13.a
 .Lfor:														@; Es pot dir .Lfor perquè en la següent subrutina s'empra .Lwhile.
-		add r4, r12, r9										@; R4 = id_city * NC (R2) + i (nº columna, nº mes).
+		add r4, #1											@; r4 = índex d'avenç per la matriu.
 		ldr r1, [r11, r4, lsl #2]							@; R1 = tvar = ttemp[id_city][i], s'obté la temperatura del mes i + 1 de la ciutat. De nou s'ha d'emprar 
 															@; lsl #2 pel tema de la estructura de la memòria emprada (4 bytes per dada).
 		bl add_Q13											@; avg += tvar; Gràcies a l'organització prèvia dels registres, es pot cridar directament la rutina.
@@ -96,7 +112,7 @@ avgmaxmin_city:
 		strh r6, [r3, #MM_IDMAX]							@; mmres->id_max = idmax;
 		mov r0, r10			
 		add sp, #4											@; Es reestableix la pila i el punter a aquesta.
-		pop {r1 - r12, pc}
+		pop {r1, r2, r4 - r11, pc}
 		
 @;-----------------------------------------------------------------------------------
 @;	avgmaxmin_month(): calcula la temperatura mitjana, màxima i mínima d'un mes
@@ -113,9 +129,25 @@ avgmaxmin_city:
 @; 		Resultat: 
 @;			R0 <- temperatura mitjana, expressada en graus Celsius en format Q13.
 @;-----------------------------------------------------------------------------------
+@;-----------------------------------------------------------------------------------
+@;	LLISTA DE VALORS DELS REGISTRES EN AQUESTA RUTINA
+@;	R0 -> dir memòria taula de temp; avg; min i max en C i F (per fer crida a 
+@;		  Celsius2Fahrenheit; return d'avg final (ja calculada).
+@;	R1 -> nrows; tvar
+@;	R2 -> id_city; sp
+@;	R3 -> t_maxmin *mmres
+@; 	R4 -> id_city; índex adreçament matriu
+@;	R5 -> idmin
+@; 	R6 -> idmax
+@; 	R7 -> max
+@;	R8 -> min
+@; 	R9 -> i (índex per bucle for)
+@; 	R10 -> nrows, avg calculat (després de div_mod).
+@;	R11 -> dir memòria taula de temp
+@;-----------------------------------------------------------------------------------
 	.global avgmaxmin_month
 avgmaxmin_month:
-		push {r1 - r11, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests registres.
+		push {r1, r2, r4 - r11, lr}					 		@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests registres.
 		mov r11, r0 										@; R11 = R0 = dir mem taula.
 		ldr r0, [r11, r2, lsl #2]							@; avg = ttemp[0][id_month]; Com fila = 0, es pot carregar la info directament amb la columna desitjada
 															@; amb un desplaçament a l'esquerra de dos bits aplicat (es multiplica per 4 el nombre ja que cada 
@@ -175,5 +207,5 @@ avgmaxmin_month:
 		strh r6, [r3, #MM_IDMAX]							@; mmres->id_max = idmax;
 		mov r0, r10			
 		add sp, #4											@; Es reestableix la pila i el punter a aquesta.
-		pop {r1 - r11, pc}
+		pop {r1, r2, r4 - r11, pc}
 .end
