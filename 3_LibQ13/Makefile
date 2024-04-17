@@ -81,7 +81,7 @@ demo_CelsiusFahrenheit_lib.elf : build/demo_CelsiusFahrenheit_lib.o build/Celsiu
 #En la segona fase no calia posar CelsiusFahrenheit_lib.o com a dependència de la regla ja que era un arxiu ja obtingut
 #d'un projecte extern (i que en teoria no havia de patir modificacions). No obstant, en aquesta part de la pràctica
 #aquest arxiu pot modificar-se en el transcurs d'aquesta (detecció d'errors amb nous tests, per exemple), de manera que
-#sí que cal incloure com a dependència.
+#sí que cal incloure'l com a dependència.
 geotemp_lib.elf : build/avgmaxmintemp_lib.o build/geotemp_lib.o build/CelsiusFahrenheit_lib.o build/data_lib.o libQ13.a
 	arm-none-eabi-ld $(LDFLAGS) build/avgmaxmintemp_lib.o build/geotemp_lib.o build/data_lib.o \
 						tests/startup.o libQ13.a tests/libfoncompus.a build/CelsiusFahrenheit_lib.o \

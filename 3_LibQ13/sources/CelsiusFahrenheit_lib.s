@@ -7,6 +7,8 @@
 @;	Programador 2: ivan.molinero@estudiants.urv.cat
 @;----------------------------------------------------------------
 
+.include "Q13.i"
+
 @; CONSTANTS (càlcul en documentació i vídeos de la pràctica).
 Q13_9_5 = 0x0000399A
 Q13_5_9 = 0x000011C7
