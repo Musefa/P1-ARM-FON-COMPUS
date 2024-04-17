@@ -1,7 +1,8 @@
 @;----------------------------------------------------------------
-@;	CelsiusFahrenheit_lib.s: adaptació de les rutines de conversió
-@;							 de temperatura en Q13 de la fase 1 
-@;							 amb les rutines de libQ13.a
+@;	CelsiusFahrenheit_exact_lib.s: adaptació de les rutines de 
+@;  							   conversió de temperatura en Q13  
+@;							       de la fase 1 amb les rutines de 
+@;								   xlibQ13.a
 @;----------------------------------------------------------------
 @;	Programador 1: eric.garcia@estudiants.urv.cat
 @;	Programador 2: ivan.molinero@estudiants.urv.cat
@@ -24,7 +25,7 @@ Q13_32 = 0x00040000
 @;	Sortida:
 @;		R0 		-> output = (input * 9/5) + 32.0;
 @;----------------------------------------------------------------------------
-	.global Celsius2Fahrenheit									@; Es podria canviar el nom de la rutina per tal de diferenciar.la
+	.global Celsius2Fahrenheit									@; Es podria canviar el nom de la rutina per tal de diferenciar-la
 																@; de la de la fase 1, però com aquests arxius es cridaran per 
 																@; l'assemblador juntament amb els de test, no cal fer la 
 																@; diferenciació. A més, caldria modificar tots els noms de les 
@@ -56,7 +57,7 @@ Celsius2Fahrenheit:
 @;	Sortida:
 @;		R0 		-> output = (input - 32.0) * 5/9;
 @;----------------------------------------------------------------------------
-	.global Fahrenheit2Celsius									@; Es podria canviar el nom de la rutina per tal de diferenciar.la
+	.global Fahrenheit2Celsius									@; Es podria canviar el nom de la rutina per tal de diferenciar-la
 																@; de la de la fase 1, però com aquests arxius es cridaran per 
 																@; l'assemblador juntament amb els de test, no cal fer la 
 																@; diferenciació. A més, caldria modificar tots els noms de les 

@@ -109,6 +109,9 @@ avgmaxmin_city:
 @;			R3 -> t_maxmin *mmres, adreça de l'estructura multicamp on es guarden
 @;				  les temperatures màximes i mínimes en Celsius i Fahrenheit, així
 @;				  com la posició on estan en la taula.
+@;
+@; 		Resultat: 
+@;			R0 <- temperatura mitjana, expressada en graus Celsius en format Q13.
 @;-----------------------------------------------------------------------------------
 	.global avgmaxmin_month
 avgmaxmin_month:

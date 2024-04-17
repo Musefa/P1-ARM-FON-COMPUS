@@ -24,7 +24,7 @@ Q13_32 = 0x00040000
 @;	Sortida:
 @;		R0 		-> output = (input * 9/5) + 32.0;
 @;----------------------------------------------------------------------------
-	.global Celsius2Fahrenheit									@; Es podria canviar el nom de la rutina per tal de diferenciar.la
+	.global Celsius2Fahrenheit									@; Es podria canviar el nom de la rutina per tal de diferenciar-la
 																@; de la de la fase 1, però com aquests arxius es cridaran per 
 																@; l'assemblador juntament amb els de test, no cal fer la 
 																@; diferenciació. A més, caldria modificar tots els noms de les 
@@ -56,7 +56,7 @@ Celsius2Fahrenheit:
 @;	Sortida:
 @;		R0 		-> output = (input - 32.0) * 5/9;
 @;----------------------------------------------------------------------------
-	.global Fahrenheit2Celsius									@; Es podria canviar el nom de la rutina per tal de diferenciar.la
+	.global Fahrenheit2Celsius									@; Es podria canviar el nom de la rutina per tal de diferenciar-la
 																@; de la de la fase 1, però com aquests arxius es cridaran per 
 																@; l'assemblador juntament amb els de test, no cal fer la 
 																@; diferenciació. A més, caldria modificar tots els noms de les 

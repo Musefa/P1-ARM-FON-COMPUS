@@ -28,8 +28,8 @@ add_Q13:
 		mov r3, #0													@; unsigned char ov = 0, inicialment s'assumeix que no hi ha overflow.
 		adds r0, r1													@; R0 += R1 --> suma = num1 + num2; S'actualitzen els flags per tal
 																	@; de saber si s'ha produït overflow.
-		movvs r3, #1												@; Si hi ha overflow (predicació vs, overflow set), es canvia l'estat de
-																	@; de ov = 1;
+		movvs r3, #1												@; Si hi ha overflow (predicació vs, overflow set), es canvia l'estat
+																	@; d'ov = 1;
 		strb r3, [r2]												@; *overflow = ov;
 		pop {r3, pc}
 		
@@ -46,15 +46,14 @@ add_Q13:
 @;				   retorna són els bits baixos del resultat.
 @;		RESULTAT -> R0 = resta dels dos nombres.
 @;----------------------------------------------------------------	
-
 	.global sub_Q13
 sub_Q13:
 		push {r3, lr}
 		mov r3, #0													@; unsigned char ov = 0, inicialment s'assumeix que no hi ha overflow.
 		subs r0, r1													@; R0 -= R1 --> resta = num1 - num2; S'actualitzen els flags per tal
 																	@; de saber si s'ha produït overflow.
-		movvs r3, #1												@; Si hi ha overflow (predicació vs, overflow set), es canvia l'estat de
-																	@; de ov = 1;
+		movvs r3, #1												@; Si hi ha overflow (predicació vs, overflow set), es canvia l'estat
+																	@; d'ov = 1;
 		strb r3, [r2]												@; *overflow = ov;
 		pop {r3, pc}
 		
@@ -73,19 +72,17 @@ sub_Q13:
 @;----------------------------------------------------------------
 	.global mul_Q13
 mul_Q13:
-		push {r3, lr}												@; Es fa push de r2 per poder operar amb aquest, i després fer pop per
-																	@; accedir a memòria, ja que no cal accedir a aquesta variable fins al
-																	@; final de la rutina i és un registre emprable.
+		push {r3, lr}												
 		smull r0, r3, r1, r0										@; prod64 = num1 * num2, on Rlo = R0 i Rhi = R4. Es fa així perquè el 
 																	@; retorn del resultat es fa directament a través de R0 (només es
 																	@; retornen els 32 bits baixos del producte.
 		@; ------------------------------------------------------------------------------------------------------------------------------------------------
-		@; DESPLAÇAMENT LÒGIC A LA DRETA D'UN NOMBRE DE 64 BITS EMMAGATZEMAT EN 2 REGISTRES
+		@; DESPLAÇAMENT ARITMÈTIC A LA DRETA D'UN NOMBRE DE 64 BITS EMMAGATZEMAT EN 2 REGISTRES
 		@; Un cop realitzada la multiplicació, en coma fixa cal realitzar un ajust del resultat dividint per 2^f (sent f el nombre de bits emprats per 
 		@; representar la part decimal del nombre, en el cas d'aquesta pràctica f = 13). Aquesta divisió en ensamblador es pot traduir en un desplaçament
-		@; lògic a la dreta (lsr), ja que s'està operant amb un nombre expressable com a potència de la base binària (el nombre s'expressa com 2^f, la base
-		@; elevada a quelcom).
-		@; En la documentació oficial de l'assignatura, s'explica com realitzar un desplaçament lògic a la dreta d'un nombre de 64 bits emmagatzemat en 2 
+		@; aritmètic a la dreta (asr), ja que s'està operant amb un nombre expressable com a potència de la base binària (el nombre s'expressa com 2^f, la 
+		@; base elevada a quelcom).
+		@; En la documentació oficial de l'assignatura, s'explica com realitzar un desplaçament aritmètic a la dreta d'un nombre de 64 bits emmagatzemat en 2 
 		@; registres per tal de no perdre informació (bits) en aquesta operació, ja que si es fes el desplaçament a la lleugera, els bits que sortissin per 
 		@; la dreta del RdHi es perdrien, i per l'esquerra del RdLo entrarien un conjunt de 0, modificant indegudament el resultat.
 		@; Sent d = nombre de bits que es volen desplaçar, l'explicació es la següent:
@@ -100,7 +97,7 @@ mul_Q13:
 		@; 									pes són 0, es pot realitzar una orr per tal de filtrar el bits d que sortirien i guardar-los al registre Rlo, 
 		@; 									simulant un lsr correcte sense pèrdues de bits. Com als 32 - d bits de menys pes restants de Rhi hi queden 0,
 		@;									els 32 - d bits de menys pes del Rlo no patiran modificacions.
-		@; 		mov Rhi, Rhi, lsr Rd --> Es desplacen els d bits a la dreta en el registre Rhi.
+		@; 		mov Rhi, Rhi, asr Rd --> Es desplacen els d bits a la dreta en el registre Rhi.
 		@; Ara bé, en aquesta part de la pràctica es fan únicament les següents tres operacions:
 		
 		mov r0, r0, lsr #13
@@ -109,6 +106,7 @@ mul_Q13:
 		
 		@; A diferència de la primera part de la pràctica, aquí cal fer un asr #13 per tal d'analitzar els bits alts de la multiplicació i comprovar si
 		@; s'ha produït (o no) overflow.
+		@; ------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		
 		tst r0, #MASK_SIGN											@; S'analitza el signe del nombre resultat (primer signe del registre amb
@@ -140,7 +138,7 @@ mul_Q13:
 @;				   retorna són els bits baixos del resultat.
 @;		RESULTAT -> R0 = divisió dels dos nombres.
 @;----------------------------------------------------------------
-		.global exact_div_Q13
+	.global exact_div_Q13
 exact_div_Q13:
 		push {r1 - r12, lr}
 		cmp r1, #0													@; num2 == 0???
