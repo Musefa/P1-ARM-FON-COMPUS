@@ -36,7 +36,7 @@ Celsius2Fahrenheit:
 		push {r1 - r3, lr}												@; Es fa un push dels registres que no han de retornar cap valor i dels quals no es
 																		@; vol perdre informació. Com en r0 es retorna el resultat, no s'ha de fer push.
 		ldr r3, =Q13_9_5												@; Es carrega el nombre 9/5 en codificació en coma fixa al registre r3. S'ha de fer
-																			@; així ja que com la distància de separació del bit a 1 de major pes i el bit a 1
+																		@; així ja que com la distància de separació del bit a 1 de major pes i el bit a 1
 																		@; de menys pes és major a 8 bits no es pot emprar com a registre immediat.
 																		@; D'aquesta manera, es fa que la constant sigui accessible ràpidament amb un únic
 																		@; accés a memòria.
@@ -73,12 +73,12 @@ Celsius2Fahrenheit:
 		@; d'ensamblatge ja queda reflectit el nombre 19 final resultat de 32 - 13), no es guarden els bits que sortirien per la dreta del Rlo (el residu, 
 		@; que no interessa en el context de la pràctica) i no es fa el desplaçament a la dreta de la part alta, ja que com al final s'acaba guardant el
 		@; resultat del Rlo únicament, no cal arreglar/ajustar Rhi, perdent temps inútilment.
-		@; Addicionalment, el resultat de l'orr es guarda a r0 en comptes de al Rlo (r1), per facilitar després el retorn sense necessitat de relitzar un
+		@; Addicionalment, el resultat de l'orr es guarda a r0 en comptes de al Rlo (r1), per facilitar després el retorn sense necessitat de realitzar un
 		@; mov addicional.
 		@; ------------------------------------------------------------------------------------------------------------------------------------------------
 																		
 		add r0, #Q13_32 												@; Es suma el desplaçament en l'escala Fahrenheit. No cal sumar res al Rhi (r2) 
-																		@; perquèes perd aquesta informació, per tant tampoc cal actualitzar els flags.
+																		@; perquè es perd aquesta informació, per tant tampoc cal actualitzar els flags.
 		pop {r1 - r3, pc}												@; Es fa un pop als registres emprats en la funció amb els valors previs a 
 																		@; l'execució d'aquesta i al pc per fer efectiu el retorn de la funció al main.
 
