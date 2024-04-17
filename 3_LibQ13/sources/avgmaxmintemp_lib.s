@@ -54,7 +54,7 @@ Q13_12 = 0x18000											@; Nombre 12 en Q13, necessari per avgmaxmintemp_city
 															@; diferenciació. A més, caldria modificar tots els noms de les 
 															@; funcions en aquests arxius de test.
 avgmaxmin_city:
-		push {r1, r2, r4 - r11, lr}						@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests registres per accedir a la fila id_city i guardar
+		push {r1, r2, r4 - r11, lr}							@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests registres per accedir a la fila id_city i guardar
 															@; la direcció de memòria necessària per poder cridar rutines de libQ13.a i emmagatzemar l'estat de l'overflow.
 		mov r11, r0 										@; R11 = R0 = dir mem taula.
 		mov r1, #12											@; Com a mul no es poden emprar valors immediats, cal fer un mov previ. Es "perd" nrows (queda a la pila) 
