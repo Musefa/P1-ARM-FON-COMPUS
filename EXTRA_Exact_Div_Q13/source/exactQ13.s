@@ -164,7 +164,6 @@ exact_div_Q13:
 		cmp r0, #0
 		beq .Lonly32												@; RHi està buit, no cal entrar en un bucle de divisió per un nombre de
 																	@; 64 bits.
-																	
 		mov r10, #0													@; r10 = final_result.
 		mov r5, #32													@; Es fan 32 iteracions, fins finalitzar el primer registre.
 		mov r6, #0													@; índex bucle for, i = 1;
