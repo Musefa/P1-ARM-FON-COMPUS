@@ -156,7 +156,7 @@ avgmaxmin_city:
 @;-----------------------------------------------------------------------------------
 	.global avgmaxmin_month
 avgmaxmin_month:
-		push {r2 - r11, lr}									@; Es guarda r2 perquè es fa modificacions sobre aquest registre per poder cridar a div_mod.
+		push {r2 - r11, lr}									@; Es guarda r2 perquè es fan modificacions sobre aquest registre per poder cridar a div_mod.
 		mov r11, r0 										@; R11 = R0 = dir mem taula.
 		ldr r0, [r11, r2, lsl#2]							@; avg = ttemp[0][id_month]; Com fila = 0, es pot carregar la info directament amb la columna desitjada
 															@; amb un desplaçament a l'esquerra de dos bits aplicat (es multiplica per 4 el nombre ja que cada 
