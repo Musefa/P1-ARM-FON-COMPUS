@@ -93,7 +93,7 @@ mul_Q13:
 		@;								 del que es vulgui.
 		@; 		orr Rlo, Rhi, lsl R32-d --> Quan Rhi rep el desplaçament de lsl R32-d, al registre Rhi queden els bits que sortirien per la dreta si es fes
 		@;									un lsr a la lleugera, però emmagatzemats en la part alta, ocupant d bits. Com a Rlo els primers d bits de més 
-		@; 									pes són 0, es pot realitzar una orr per tal de filtrar el bits d que sortirien i guardar-los al registre Rlo, 
+		@; 									pes són 0, es pot realitzar una orr per tal de filtrar els bits d que sortirien i guardar-los al registre Rlo, 
 		@; 									simulant un lsr correcte sense pèrdues de bits. Com als 32 - d bits de menys pes restants de Rhi hi queden 0,
 		@;									els 32 - d bits de menys pes del Rlo no patiran modificacions.
 		@; 		mov Rhi, Rhi, asr Rd --> Es desplacen els d bits a la dreta en el registre Rhi.
