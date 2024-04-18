@@ -64,7 +64,7 @@
 @;-----------------------------------------------------------------------------------
 	.global avgmaxmin_city
 avgmaxmin_city:
-		push {r1 - r11, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests regitres per accedir a la fila id_city.
+		push {r1 - r11, lr}									@; Es guarden r1 i r2 perquè es fan modificacions sobre aquests registres per accedir a la fila id_city.
 		mov r11, r0 										@; R11 = R0 = dir mem taula.
 		mov r1, #12											@; Com a mul no es poden emprar valors immediats, cal fer un mov previ. Es posa aquí per reaprofitar la crida a div_mod. 
 															@; Es "perd" nrows (realment es perd la seva possibilitat d´accés ràpid, el valor queda a la pila) però com no s'empra 
